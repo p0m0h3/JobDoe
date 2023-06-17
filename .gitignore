@@ -20,3 +20,6 @@ workerengine
 
 # Go workspace file
 go.work
+
+# Environment file
+env

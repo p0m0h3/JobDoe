@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	_ "github.com/fuzzercloud/workerengine/docs"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
@@ -19,5 +22,5 @@ func main() {
 	})
 
 	app.Get("/docs/*", swagger.HandlerDefault)
-	app.Listen(":8080")
+	log.Fatal(app.Listen(os.Getenv("HOST") + ":8080"))
 }
