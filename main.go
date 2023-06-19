@@ -4,9 +4,11 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/fuzzercloud/workerengine/docs"
+	_ "fuzz.codes/fuzzercloud/workerengine/docs"
+	"fuzz.codes/fuzzercloud/workerengine/tool"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
+	"github.com/joho/godotenv"
 )
 
 // @title WorkerEngine API
@@ -17,10 +19,11 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World 👋!")
-	})
+	godotenv.Load("env")
 
 	app.Get("/docs/*", swagger.HandlerDefault)
-	log.Fatal(app.Listen(os.Getenv("HOST") + ":8080"))
+
+	tool.RegisterRoutes(app)
+
+	log.Fatal(app.Listen(os.Getenv("LISTEN_ON")))
 }

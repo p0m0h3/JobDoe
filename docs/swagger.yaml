@@ -1,4 +1,41 @@
+basePath: /
+host: localhost:8080
 info:
   contact: {}
-paths: {}
+  description: WorkerEngine is a sandbox API to execute TSF based software.
+  title: WorkerEngine API
+  version: "1.0"
+paths:
+  /tool/:
+    get:
+      consumes:
+      - application/json
+      description: Get the name of all available tools
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Get all available tools
+      tags:
+      - tools
+  /tool/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get details for a tool
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get available tool by name
+      tags:
+      - tools
 swagger: "2.0"
