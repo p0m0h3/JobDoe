@@ -31,7 +31,13 @@ const docTemplate = `{
                 "summary": "Get all available tools",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -63,7 +69,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.GetToolResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found"
@@ -71,6 +80,116 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error"
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "tool.GetToolResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "spec": {
+                    "$ref": "#/definitions/tsf.Tool"
+                }
+            }
+        },
+        "tsf.EnvVar": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "tsf.Executable": {
+            "type": "object",
+            "properties": {
+                "command": {
+                    "type": "string"
+                },
+                "modifiers": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/tsf.Modifier"
+                    }
+                },
+                "stdin": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "tsf.IOType": {
+            "type": "integer",
+            "enum": [
+                0,
+                0,
+                0,
+                0
+            ],
+            "x-enum-varnames": [
+                "FILE",
+                "STRING",
+                "STDOUT",
+                "STDIN"
+            ]
+        },
+        "tsf.IOVariable": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/tsf.IOType"
+                }
+            }
+        },
+        "tsf.Modifier": {
+            "type": "object",
+            "properties": {
+                "string": {
+                    "type": "string"
+                },
+                "variables": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "tsf.Tool": {
+            "type": "object",
+            "properties": {
+                "env": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.EnvVar"
+                    }
+                },
+                "exe": {
+                    "$ref": "#/definitions/tsf.Executable"
+                },
+                "inputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.IOVariable"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "outputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.IOVariable"
+                    }
+                },
+                "sandbox": {
+                    "type": "string"
                 }
             }
         }

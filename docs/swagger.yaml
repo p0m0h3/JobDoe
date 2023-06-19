@@ -1,4 +1,77 @@
 basePath: /
+definitions:
+  tool.GetToolResponse:
+    properties:
+      name:
+        type: string
+      spec:
+        $ref: '#/definitions/tsf.Tool'
+    type: object
+  tsf.EnvVar:
+    properties:
+      name:
+        type: string
+    type: object
+  tsf.Executable:
+    properties:
+      command:
+        type: string
+      modifiers:
+        additionalProperties:
+          $ref: '#/definitions/tsf.Modifier'
+        type: object
+      stdin:
+        type: boolean
+    type: object
+  tsf.IOType:
+    enum:
+    - 0
+    - 0
+    - 0
+    - 0
+    type: integer
+    x-enum-varnames:
+    - FILE
+    - STRING
+    - STDOUT
+    - STDIN
+  tsf.IOVariable:
+    properties:
+      name:
+        type: string
+      type:
+        $ref: '#/definitions/tsf.IOType'
+    type: object
+  tsf.Modifier:
+    properties:
+      string:
+        type: string
+      variables:
+        items:
+          type: string
+        type: array
+    type: object
+  tsf.Tool:
+    properties:
+      env:
+        items:
+          $ref: '#/definitions/tsf.EnvVar'
+        type: array
+      exe:
+        $ref: '#/definitions/tsf.Executable'
+      inputs:
+        items:
+          $ref: '#/definitions/tsf.IOVariable'
+        type: array
+      name:
+        type: string
+      outputs:
+        items:
+          $ref: '#/definitions/tsf.IOVariable'
+        type: array
+      sandbox:
+        type: string
+    type: object
 host: 127.0.0.1:8080
 info:
   contact: {}
@@ -16,6 +89,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            items:
+              type: string
+            type: array
         "500":
           description: Internal Server Error
       summary: Get all available tools
@@ -37,6 +114,8 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/tool.GetToolResponse'
         "404":
           description: Not Found
         "500":

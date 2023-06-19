@@ -14,21 +14,13 @@ import (
 // @Tags         tools
 // @Accept       json
 // @Produce      json
-// @Success      200
+// @Success      200 {array} string
 // @Failure      500
 // @Router       /tool/ [get]
 func GetAllTools(c *fiber.Ctx) error {
-	toolFiles, err := os.ReadDir(os.Getenv("TOOLS_DIRECTORY"))
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
-
 	result := make([]string, 0)
-
-	for _, file := range toolFiles {
-		if strings.HasSuffix(file.Name(), ".toml") {
-			result = append(result, strings.TrimSuffix(file.Name(), ".toml"))
-		}
+	for name, _ := range Tools {
+		result = append(result, name)
 	}
 	return c.JSON(result)
 }
@@ -40,20 +32,31 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Param        name  path  string  true  "Tool name"
 // @Accept       json
 // @Produce      json
-// @Success      200
+// @Success      200 {object} GetToolResponse
 // @Failure      500
 // @Failure      404
 // @Router       /tool/{name} [get]
 func GetTool(c *fiber.Ctx) error {
-	data, err := os.ReadFile(os.Getenv("TOOLS_DIRECTORY") + "/" + c.Params("name") + ".toml")
+	data, err := os.ReadFile(os.Getenv("TOOLS_DIRECTORY") + "/" + Tools[c.Params("name")])
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).SendString(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(ErrorResponse{
+			Code:    fiber.StatusNotFound,
+			Message: err.Error(),
+		})
 	}
 
 	tool, err := tsf.Parse(data)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{
+			Code:    fiber.StatusInternalServerError,
+			Message: err.Error(),
+		})
 	}
 
-	return c.JSON(tool)
+	return c.JSON(
+		GetToolResponse{
+			Name: strings.TrimSuffix(c.Params("name"), ".toml"),
+			Spec: *tool,
+		},
+	)
 }
