@@ -1,5 +1,10 @@
 basePath: /
 definitions:
+  tool.ErrorResponse:
+    properties:
+      code:
+        type: integer
+    type: object
   tool.GetToolResponse:
     properties:
       name:
@@ -95,6 +100,8 @@ paths:
             type: array
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tool.ErrorResponse'
       summary: Get all available tools
       tags:
       - tools
@@ -118,8 +125,12 @@ paths:
             $ref: '#/definitions/tool.GetToolResponse'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/tool.ErrorResponse'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tool.ErrorResponse'
       summary: Get available tool by name
       tags:
       - tools

@@ -1,10 +1,8 @@
 package tool
 
 import (
-	"os"
 	"strings"
 
-	"fuzz.codes/fuzzercloud/tsf"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,7 +13,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Success      200 {array} string
-// @Failure      500
+// @Failure      500 {object} ErrorResponse
 // @Router       /tool/ [get]
 func GetAllTools(c *fiber.Ctx) error {
 	result := make([]string, 0)
@@ -33,23 +31,14 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Success      200 {object} GetToolResponse
-// @Failure      500
-// @Failure      404
+// @Failure      500 {object} ErrorResponse
+// @Failure      404 {object} ErrorResponse
 // @Router       /tool/{name} [get]
 func GetTool(c *fiber.Ctx) error {
-	data, err := os.ReadFile(os.Getenv("TOOLS_DIRECTORY") + "/" + Tools[c.Params("name")])
-	if err != nil {
+	tool, ok := Tools[c.Params("name")]
+	if !ok {
 		return c.Status(fiber.StatusNotFound).JSON(ErrorResponse{
-			Code:    fiber.StatusNotFound,
-			Message: err.Error(),
-		})
-	}
-
-	tool, err := tsf.Parse(data)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{
-			Code:    fiber.StatusInternalServerError,
-			Message: err.Error(),
+			Code: fiber.StatusNotFound,
 		})
 	}
 

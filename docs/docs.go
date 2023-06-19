@@ -40,7 +40,10 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -75,16 +78,30 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ErrorResponse"
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ErrorResponse"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "tool.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                }
+            }
+        },
         "tool.GetToolResponse": {
             "type": "object",
             "properties": {
