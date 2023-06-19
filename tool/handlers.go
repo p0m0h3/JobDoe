@@ -37,6 +37,7 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Summary      Get available tool by name
 // @Description  Get details for a tool
 // @Tags         tools
+// @Param        name  path  string  true  "Tool name"
 // @Accept       json
 // @Produce      json
 // @Success      200

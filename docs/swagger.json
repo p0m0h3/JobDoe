@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "127.0.0.1:8080",
     "basePath": "/",
     "paths": {
         "/tool/": {
@@ -45,6 +45,15 @@
                     "tools"
                 ],
                 "summary": "Get available tool by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tool name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"

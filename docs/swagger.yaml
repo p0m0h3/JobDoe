@@ -1,5 +1,5 @@
 basePath: /
-host: localhost:8080
+host: 127.0.0.1:8080
 info:
   contact: {}
   description: WorkerEngine is a sandbox API to execute TSF based software.
@@ -26,6 +26,12 @@ paths:
       consumes:
       - application/json
       description: Get details for a tool
+      parameters:
+      - description: Tool name
+        in: path
+        name: name
+        required: true
+        type: string
       produces:
       - application/json
       responses:

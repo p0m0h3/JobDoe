@@ -14,7 +14,7 @@ import (
 // @title WorkerEngine API
 // @version 1.0
 // @description WorkerEngine is a sandbox API to execute TSF based software.
-// @host localhost:8080
+// @host 127.0.0.1:8080
 // @BasePath /
 func main() {
 	app := fiber.New()
