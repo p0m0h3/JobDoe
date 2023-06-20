@@ -5,6 +5,7 @@ import (
 	"os"
 
 	_ "fuzz.codes/fuzzercloud/workerengine/docs"
+	"fuzz.codes/fuzzercloud/workerengine/task"
 	"fuzz.codes/fuzzercloud/workerengine/tool"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
@@ -24,6 +25,7 @@ func main() {
 	app.Get("/docs/*", swagger.HandlerDefault)
 
 	tool.RegisterRoutes(app)
+	task.RegisterRoutes(app)
 
 	log.Fatal(app.Listen(os.Getenv("LISTEN_ON")))
 }

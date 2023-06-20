@@ -1,5 +1,42 @@
 basePath: /
 definitions:
+  task.CreateTaskRequest:
+    properties:
+      env:
+        additionalProperties:
+          type: string
+        type: object
+      inputs:
+        additionalProperties:
+          type: string
+        type: object
+      modifier:
+        type: string
+      name:
+        type: string
+      stdin:
+        type: string
+    required:
+    - inputs
+    - modifier
+    - name
+    type: object
+  task.CreateTaskResponse:
+    properties:
+      id:
+        type: string
+      tool:
+        type: string
+    type: object
+  task.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      validation:
+        items:
+          type: string
+        type: array
+    type: object
   tool.ErrorResponse:
     properties:
       code:
@@ -84,6 +121,36 @@ info:
   title: WorkerEngine API
   version: "1.0"
 paths:
+  /task/:
+    post:
+      consumes:
+      - application/json
+      description: Start a new sandbox with a tool running inside
+      parameters:
+      - description: new task data
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/task.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/task.CreateTaskResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/task.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task.ErrorResponse'
+      summary: Create a new task
+      tags:
+      - tasks
   /tool/:
     get:
       consumes:
