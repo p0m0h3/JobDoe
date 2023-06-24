@@ -48,3 +48,26 @@ func CreateTask(c *fiber.Ctx) error {
 
 	return c.JSON(CreateTaskResponse{ID: id, Tool: req.ToolName})
 }
+
+// GetTask godoc
+// @Summary      Get the details of a task
+// @Description  Returns the details of a task
+// @Tags         tasks
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "task id"
+// @Success      200 {object} GetTaskResponse
+// @Failure      404 {object} ErrorResponse
+// @Failure      500 {object} ErrorResponse
+// @Router       /task/{id} [post]
+func GetTask(c *fiber.Ctx) error {
+	container, err := GetContainerTask(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(ErrorResponse{
+			Code:    fiber.StatusNotFound,
+			Message: err.Error(),
+		})
+	}
+
+	return c.JSON(container)
+}

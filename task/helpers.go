@@ -31,10 +31,11 @@ func ValidateCreateTaskRequest(r CreateTaskRequest) ([]string, error) {
 }
 
 type TaskSpec struct {
-	ID        string
-	ImageName string
-	Command   []string
-	Stdin     string
+	ID         string
+	ImageName  string
+	Command    []string
+	EnvVarList map[string]string
+	Stdin      string
 }
 
 func InjectVariable(c []string, p string, v string) {
@@ -74,6 +75,7 @@ func NewTaskSpec(tool tsf.Tool, req CreateTaskRequest) (TaskSpec, error) {
 	}
 
 	spec.Stdin = req.Stdin
+	spec.EnvVarList = req.EnvVarList
 
 	return spec, nil
 }
@@ -86,6 +88,7 @@ func NewContainerTask(t TaskSpec) (string, error) {
 	}
 	s := specgen.NewSpecGenerator(t.ImageName, false)
 	s.Command = t.Command
+	s.Env = t.EnvVarList
 
 	createResponse, err := containers.CreateWithSpec(Connection, s, nil)
 	if err != nil {
@@ -96,6 +99,21 @@ func NewContainerTask(t TaskSpec) (string, error) {
 	}
 
 	return createResponse.ID, nil
+}
+
+func GetContainerTask(id string) (*GetTaskResponse, error) {
+	data, err := containers.Inspect(Connection, id, new(containers.InspectOptions).WithSize(true))
+	if err != nil {
+		return nil, err
+	}
+
+	spec := &GetTaskResponse{
+		ID:        data.ID,
+		ImageName: data.ImageName,
+		Command:   data.Config.Cmd,
+	}
+
+	return spec, nil
 }
 
 func InitConnection() {

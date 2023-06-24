@@ -32,10 +32,23 @@ definitions:
     properties:
       code:
         type: integer
+      message:
+        type: string
       validation:
         items:
           type: string
         type: array
+    type: object
+  task.GetTaskResponse:
+    properties:
+      command:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      imageName:
+        type: string
     type: object
   tool.ErrorResponse:
     properties:
@@ -140,8 +153,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/task.CreateTaskResponse'
-        "403":
-          description: Forbidden
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/task.ErrorResponse'
         "500":
@@ -149,6 +162,35 @@ paths:
           schema:
             $ref: '#/definitions/task.ErrorResponse'
       summary: Create a new task
+      tags:
+      - tasks
+  /task/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Returns the details of a task
+      parameters:
+      - description: task id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/task.GetTaskResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task.ErrorResponse'
+      summary: Get the details of a task
       tags:
       - tasks
   /tool/:

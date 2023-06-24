@@ -8,6 +8,12 @@ type CreateTaskRequest struct {
 	Stdin      string            `json:"stdin"`
 }
 
+type GetTaskResponse struct {
+	ID        string
+	ImageName string
+	Command   []string
+}
+
 type CreateTaskResponse struct {
 	ID   string `json:"id"`
 	Tool string `json:"tool"`
