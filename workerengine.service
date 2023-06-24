@@ -1,0 +1,13 @@
+
+[Unit]
+Description=Workerengine task execution
+After=network.target
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=/opt/workerengine/env
+ExecStart=/opt/workerengine/workerengine
+
+[Install]
+WantedBy=multi-user.target
