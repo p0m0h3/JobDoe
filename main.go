@@ -20,7 +20,9 @@ var Mode string
 // @version 1.0
 // @description WorkerEngine is a sandbox API to execute TSF based software.
 // @host 127.0.0.1:7001
-// securitydefinitions.apikey
+// @securitydefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 // @BasePath /
 func main() {
 	app := fiber.New()

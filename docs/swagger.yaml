@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   task.CreateTaskRequest:
     properties:
@@ -243,4 +242,9 @@ paths:
       summary: Get available tool by name
       tags:
       - tools
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
