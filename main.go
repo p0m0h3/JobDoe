@@ -14,6 +14,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var Mode string
+
 // @title WorkerEngine API
 // @version 1.0
 // @description WorkerEngine is a sandbox API to execute TSF based software.
@@ -25,13 +27,16 @@ func main() {
 
 	godotenv.Load("env")
 
-	accessKeyHash = sha256.Sum256([]byte(os.Getenv("ACCESS_KEY")))
+	Mode = os.Getenv("MODE")
 
-	app.Use(keyauth.New(keyauth.Config{
-		Validator: keyValidator,
-	}))
-
-	app.Get("/docs/*", swagger.HandlerDefault)
+	if Mode == "dev" {
+		app.Get("/docs/*", swagger.HandlerDefault)
+	} else {
+		accessKeyHash = sha256.Sum256([]byte(os.Getenv("ACCESS_KEY")))
+		app.Use(keyauth.New(keyauth.Config{
+			Validator: keyValidator,
+		}))
+	}
 
 	tool.RegisterRoutes(app)
 	task.RegisterRoutes(app)
