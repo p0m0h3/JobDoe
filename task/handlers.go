@@ -1,7 +1,6 @@
 package task
 
 import (
-	"fuzz.codes/fuzzercloud/workerengine/tool"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,7 +22,7 @@ func CreateTask(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{Code: fiber.StatusBadRequest})
 	}
 
-	badFields, err := ValidateCreateTaskRequest(req)
+	badFields, err := ValidateRequest[CreateTaskRequest](req)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
 			Code:       fiber.StatusBadRequest,
@@ -31,7 +30,7 @@ func CreateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	spec, err := NewTaskSpec(*tool.Tools[req.ToolName], req)
+	spec, err := NewTaskSpec(req)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
 			Code:    fiber.StatusBadRequest,

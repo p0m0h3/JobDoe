@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"fuzz.codes/fuzzercloud/tsf"
+	"fuzz.codes/fuzzercloud/workerengine/tool"
 	"github.com/containers/podman/v4/pkg/bindings"
 	"github.com/containers/podman/v4/pkg/bindings/containers"
 	"github.com/containers/podman/v4/pkg/bindings/images"
@@ -16,7 +16,7 @@ import (
 
 var Connection context.Context
 
-func ValidateCreateTaskRequest(r CreateTaskRequest) ([]string, error) {
+func ValidateRequest[Request any](r Request) ([]string, error) {
 
 	var validate = validator.New()
 
@@ -38,7 +38,7 @@ type TaskSpec struct {
 	Stdin      string
 }
 
-func InjectVariable(c []string, p string, v string) {
+func InjectVariables(c []string, p string, v string) {
 	for i, slice := range c {
 		if slice == p {
 			c[i] = v
@@ -47,7 +47,8 @@ func InjectVariable(c []string, p string, v string) {
 	}
 }
 
-func NewTaskSpec(tool tsf.Tool, req CreateTaskRequest) (TaskSpec, error) {
+func NewTaskSpec(req CreateTaskRequest) (TaskSpec, error) {
+	tool := *tool.Tools[req.ToolName]
 	spec := TaskSpec{}
 	spec.ImageName = tool.Name
 	spec.Command = make([]string, 0)
@@ -64,7 +65,7 @@ func NewTaskSpec(tool tsf.Tool, req CreateTaskRequest) (TaskSpec, error) {
 		found := false
 		for k, v := range req.InputList {
 			if variableName == k {
-				InjectVariable(spec.Command, varPlaceholder, v)
+				InjectVariables(spec.Command, varPlaceholder, v)
 				found = true
 				break
 			}
