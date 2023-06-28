@@ -106,44 +106,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/output": {
-            "get": {
-                "description": "Returns the output of a task",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Get the output of a task",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "task id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/task.GetTaskOutputResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/task.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/tool/": {
             "get": {
                 "description": "Get the name of all available tools",
@@ -277,17 +239,6 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
-                }
-            }
-        },
-        "task.GetTaskOutputResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "output": {
-                    "type": "string"
                 }
             }
         },
