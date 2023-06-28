@@ -16,7 +16,6 @@ definitions:
       stdin:
         type: string
     required:
-    - inputs
     - modifier
     - name
     type: object
@@ -37,6 +36,13 @@ definitions:
         items:
           type: string
         type: array
+    type: object
+  task.GetTaskOutputResponse:
+    properties:
+      id:
+        type: string
+      output:
+        type: string
     type: object
   task.GetTaskResponse:
     properties:
@@ -164,7 +170,7 @@ paths:
       tags:
       - tasks
   /task/{id}:
-    post:
+    get:
       consumes:
       - application/json
       description: Returns the details of a task
@@ -190,6 +196,31 @@ paths:
           schema:
             $ref: '#/definitions/task.ErrorResponse'
       summary: Get the details of a task
+      tags:
+      - tasks
+  /task/{id}/output:
+    get:
+      consumes:
+      - application/json
+      description: Returns the output of a task
+      parameters:
+      - description: task id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/task.GetTaskOutputResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task.ErrorResponse'
+      summary: Get the output of a task
       tags:
       - tasks
   /tool/:

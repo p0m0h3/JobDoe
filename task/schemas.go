@@ -3,7 +3,7 @@ package task
 type CreateTaskRequest struct {
 	ToolName   string            `json:"name" validate:"required,alphanum"`
 	Modifier   string            `json:"modifier" validate:"required,alphanum"`
-	InputList  map[string]string `json:"inputs" validate:"required"`
+	InputList  map[string]string `json:"inputs"`
 	EnvVarList map[string]string `json:"env"`
 	Stdin      string            `json:"stdin"`
 }
@@ -12,6 +12,11 @@ type GetTaskResponse struct {
 	ID        string
 	ImageName string
 	Command   []string
+}
+
+type GetTaskOutputResponse struct {
+	ID     string `json:"id"`
+	Output string `json:"output"`
 }
 
 type CreateTaskResponse struct {

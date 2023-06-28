@@ -1,0 +1,17 @@
+package container
+
+import "github.com/containers/podman/v4/pkg/bindings/images"
+
+var (
+	PULLPOLICY = "missing"
+	PULLQUIET  = true
+)
+
+func PullImage(name string) error {
+	_, err := images.Pull(Connection, name, &images.PullOptions{
+		Policy: &PULLPOLICY,
+		Quiet:  &PULLQUIET,
+	})
+
+	return err
+}

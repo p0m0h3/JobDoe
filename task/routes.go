@@ -1,11 +1,13 @@
 package task
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/contrib/websocket"
+	"github.com/gofiber/fiber/v2"
+)
 
 func RegisterRoutes(app *fiber.App) {
 	task := app.Group("/task")
 	task.Post("/", CreateTask)
 	task.Get("/:id", GetTask)
-
-	InitConnection()
+	task.Get("/:id/output", websocket.New(GetTaskOutput))
 }

@@ -1,6 +1,8 @@
 package task
 
 import (
+	"fuzz.codes/fuzzercloud/workerengine/container"
+	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -38,10 +40,11 @@ func CreateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	id, err := NewContainerTask(spec)
+	id, err := container.CreateContainer(spec)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{
-			Code: fiber.StatusInternalServerError,
+			Code:    fiber.StatusInternalServerError,
+			Message: err.Error(),
 		})
 	}
 
@@ -58,9 +61,9 @@ func CreateTask(c *fiber.Ctx) error {
 // @Success      200 {object} GetTaskResponse
 // @Failure      404 {object} ErrorResponse
 // @Failure      500 {object} ErrorResponse
-// @Router       /task/{id} [post]
+// @Router       /task/{id} [get]
 func GetTask(c *fiber.Ctx) error {
-	container, err := GetContainerTask(c.Params("id"))
+	task, err := container.InspectContainer(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(ErrorResponse{
 			Code:    fiber.StatusNotFound,
@@ -68,5 +71,20 @@ func GetTask(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(container)
+	return c.JSON(GetTaskResponse{
+		ID:        task.ID,
+		ImageName: task.ImageName,
+		Command:   task.Config.Cmd,
+	})
+}
+
+func GetTaskOutput(c *websocket.Conn) {
+	output, err := container.GetContainerLog(c.Params("id"))
+	if err != nil {
+		c.WriteMessage(1, []byte(fiber.ErrNotFound.Message))
+	}
+
+	for frame := range output {
+		c.WriteMessage(1, []byte(frame))
+	}
 }

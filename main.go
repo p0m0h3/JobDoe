@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"fuzz.codes/fuzzercloud/workerengine/container"
 	_ "fuzz.codes/fuzzercloud/workerengine/docs"
 	"fuzz.codes/fuzzercloud/workerengine/task"
 	"fuzz.codes/fuzzercloud/workerengine/tool"
@@ -39,6 +40,8 @@ func main() {
 			Validator: keyValidator,
 		}))
 	}
+
+	container.OpenConnection(os.Getenv("PODMAN_SOCKET_ADDRESS"))
 
 	tool.RegisterRoutes(app)
 	task.RegisterRoutes(app)
