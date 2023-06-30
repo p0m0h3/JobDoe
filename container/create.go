@@ -5,22 +5,18 @@ import (
 	"github.com/containers/podman/v4/pkg/specgen"
 )
 
-type ContainerSpec struct {
-	ID         string
-	ImageName  string
-	Command    []string
-	EnvVarList map[string]string
-	Stdin      string
-}
-
-func CreateContainer(t ContainerSpec) (string, error) {
-	err := PullImage(t.ImageName)
+func CreateContainer(
+	image string,
+	command []string,
+	env map[string]string,
+) (string, error) {
+	err := PullImage(image)
 	if err != nil {
 		return "", err
 	}
-	s := specgen.NewSpecGenerator(t.ImageName, false)
-	s.Command = t.Command
-	s.Env = t.EnvVarList
+	s := specgen.NewSpecGenerator(image, false)
+	s.Command = command
+	s.Env = env
 
 	createResponse, err := containers.CreateWithSpec(Connection, s, nil)
 	if err != nil {

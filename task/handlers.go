@@ -32,7 +32,7 @@ func CreateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	spec, err := NewTaskSpec(req)
+	task, err := NewTask(req)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
 			Code:    fiber.StatusBadRequest,
@@ -40,7 +40,7 @@ func CreateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	id, err := container.CreateContainer(spec)
+	id, err := task.Start()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{
 			Code:    fiber.StatusInternalServerError,
