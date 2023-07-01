@@ -11,12 +11,8 @@ type CreateTaskRequest struct {
 type GetTaskResponse struct {
 	ID        string
 	ImageName string
+	Status    string
 	Command   []string
-}
-
-type GetTaskOutputResponse struct {
-	ID     string `json:"id"`
-	Output string `json:"output"`
 }
 
 type CreateTaskResponse struct {

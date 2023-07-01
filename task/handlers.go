@@ -77,6 +77,7 @@ func GetTask(c *fiber.Ctx) error {
 		ID:        task.ID,
 		ImageName: task.ImageName,
 		Command:   task.Config.Cmd,
+		Status:    task.State.Status,
 	})
 }
 
