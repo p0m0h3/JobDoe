@@ -11,6 +11,7 @@ import (
 	"fuzz.codes/fuzzercloud/workerengine/tool"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 	"github.com/joho/godotenv"
 )
@@ -27,6 +28,8 @@ var Mode string
 // @BasePath /
 func main() {
 	app := fiber.New()
+
+	app.Use(logger.New())
 
 	godotenv.Load("env")
 
