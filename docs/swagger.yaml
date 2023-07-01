@@ -47,6 +47,8 @@ definitions:
         type: string
       imageName:
         type: string
+      status:
+        type: string
     type: object
   tool.ErrorResponse:
     properties:
@@ -191,7 +193,7 @@ paths:
       summary: Get the details of a task
       tags:
       - tasks
-  /task/{id}/result:
+  /task/{id}/stdout:
     get:
       consumes:
       - application/json

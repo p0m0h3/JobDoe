@@ -92,7 +92,7 @@ func GetTask(c *fiber.Ctx) error {
 // @Success      200 {object} GetTaskResponse
 // @Failure      404 {object} ErrorResponse
 // @Failure      500 {object} ErrorResponse
-// @Router       /task/{id}/result [get]
+// @Router       /task/{id}/stdout [get]
 func GetTaskOutput(c *fiber.Ctx) error {
 	var err error
 	output := make(chan string, 1024)

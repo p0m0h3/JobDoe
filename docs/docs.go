@@ -106,7 +106,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/result": {
+        "/task/{id}/stdout": {
             "get": {
                 "description": "Returns the details of a task",
                 "consumes": [
@@ -299,6 +299,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "imageName": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 }
             }
