@@ -7,27 +7,29 @@ import (
 	"github.com/containers/podman/v4/pkg/bindings/containers"
 )
 
-func GetContainerLog(id string) (chan string, error) {
+func GetContainerLog(id string, output chan string) error {
 	con, err := InspectContainer(id)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	status, err := define.StringToContainerStatus(con.State.Status)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if status == define.ContainerStateStopped {
-		return nil, errors.New("container is not stopped")
+		return errors.New("container is not stopped")
 	}
 
-	out := make(chan string, 1024)
+	follow := false
+	err = containers.Logs(Connection, id, &containers.LogOptions{
+		Follow: &follow,
+	}, output, nil)
 
-	err = containers.Logs(Connection, id, nil, out, out)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return out, nil
+	return nil
 }

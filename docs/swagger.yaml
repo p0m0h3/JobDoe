@@ -191,6 +191,35 @@ paths:
       summary: Get the details of a task
       tags:
       - tasks
+  /task/{id}/result:
+    get:
+      consumes:
+      - application/json
+      description: Returns the details of a task
+      parameters:
+      - description: task id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/task.GetTaskResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task.ErrorResponse'
+      summary: Get the details of a task
+      tags:
+      - tasks
   /tool/:
     get:
       consumes:
