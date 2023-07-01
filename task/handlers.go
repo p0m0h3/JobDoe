@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"strings"
 
 	"fuzz.codes/fuzzercloud/workerengine/container"
 	"github.com/gofiber/contrib/websocket"
@@ -109,13 +110,13 @@ func GetTaskOutput(c *fiber.Ctx) error {
 		})
 	}
 
-	logs := ""
+	var logs strings.Builder
 	for {
 		select {
 		case <-ctx.Done():
-			return c.SendString(logs)
+			return c.SendString(logs.String())
 		case line := <-output:
-			logs += line
+			logs.WriteString(line)
 		}
 	}
 }
