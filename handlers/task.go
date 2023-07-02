@@ -6,7 +6,7 @@ import (
 
 	"fuzz.codes/fuzzercloud/workerengine/podman"
 	"fuzz.codes/fuzzercloud/workerengine/schemas"
-	"fuzz.codes/fuzzercloud/workerengine/task"
+	"fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 )
@@ -34,12 +34,12 @@ func CreateTask(c *fiber.Ctx) error {
 		return BadRequestError(c, badFields)
 	}
 
-	task, err := task.NewTask(req)
+	task, err := state.NewTask(req)
 	if err != nil {
 		return BadRequestError(c, nil)
 	}
 
-	id, err := task.Start()
+	id, err := state.StartTask(task)
 	if err != nil {
 		return InternalServerError(c)
 	}
@@ -61,7 +61,7 @@ func CreateTask(c *fiber.Ctx) error {
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /task/{id} [get]
 func GetTask(c *fiber.Ctx) error {
-	result, ok := task.Tasks[c.Params("id")]
+	result, ok := state.Tasks[c.Params("id")]
 	if !ok {
 		return NotFoundError(c)
 	}
@@ -80,7 +80,7 @@ func GetTask(c *fiber.Ctx) error {
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /task/{id}/stdout [get]
 func GetTaskOutput(c *fiber.Ctx) error {
-	t, ok := task.Tasks[c.Params("id")]
+	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
 		return NotFoundError(c)
 	}

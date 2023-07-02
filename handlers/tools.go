@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"fuzz.codes/fuzzercloud/workerengine/schemas"
-	"fuzz.codes/fuzzercloud/workerengine/task"
+	"fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -19,7 +19,7 @@ import (
 // @Router       /tool/ [get]
 func GetAllTools(c *fiber.Ctx) error {
 	result := make([]string, 0)
-	for name := range task.Tools {
+	for name := range state.Tools {
 		result = append(result, name)
 	}
 	return c.JSON(result)
@@ -37,7 +37,7 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Failure      404 {object} schemas.ErrorResponse
 // @Router       /tool/{name} [get]
 func GetTool(c *fiber.Ctx) error {
-	tool, ok := task.Tools[c.Params("name")]
+	tool, ok := state.Tools[c.Params("name")]
 	if !ok {
 		return NotFoundError(c)
 	}

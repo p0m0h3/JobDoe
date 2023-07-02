@@ -8,10 +8,11 @@ import (
 
 var Connection context.Context
 
-func OpenConnection(socket string) {
+func OpenConnection(socket string) error {
 	var err error
 	Connection, err = bindings.NewConnection(context.Background(), socket)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }

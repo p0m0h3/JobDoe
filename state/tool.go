@@ -1,4 +1,4 @@
-package task
+package state
 
 import (
 	"os"
@@ -7,7 +7,7 @@ import (
 	"fuzz.codes/fuzzercloud/tsf"
 )
 
-var Tools map[string]*tsf.Tool = make(map[string]*tsf.Tool)
+var Tools map[string]*tsf.Tool
 
 func ReadTools() error {
 	entries, err := os.ReadDir(os.Getenv("TOOLS_DIRECTORY"))

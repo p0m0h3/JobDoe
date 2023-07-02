@@ -1,25 +1,14 @@
-package task
+package state
 
 import (
 	"errors"
 	"strings"
 
-	"fuzz.codes/fuzzercloud/tsf"
 	"fuzz.codes/fuzzercloud/workerengine/podman"
 	"fuzz.codes/fuzzercloud/workerengine/schemas"
 )
 
-type Task struct {
-	ID      string            `json:"id"`
-	Command []string          `json:"cmd"`
-	Env     map[string]string `json:"env"`
-	Stdin   string            `json:"stdin"`
-	Status  string            `json:"status"`
-	ToolID  string            `json:"toolId"`
-	Spec    *tsf.Tool         `json:"tool"`
-}
-
-var Tasks map[string]*Task = make(map[string]*Task)
+var Tasks map[string]*schemas.Task
 
 func injectVariables(c []string, p string, v string) {
 	for i, slice := range c {
@@ -30,9 +19,26 @@ func injectVariables(c []string, p string, v string) {
 	}
 }
 
-func NewTask(req schemas.CreateTaskRequest) (*Task, error) {
+func ReadTasks() error {
+	containers, err := podman.GetAllContainers()
+	if err != nil {
+		return err
+	}
+
+	for _, c := range containers {
+		task := &schemas.Task{
+			ID:      c.ID,
+			Command: c.Command,
+			Status:  c.Status,
+		}
+		Tasks[task.ID] = task
+	}
+	return nil
+}
+
+func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	tool := Tools[req.ToolID]
-	t := &Task{
+	t := &schemas.Task{
 		Command: make([]string, 0),
 		Stdin:   req.Stdin,
 		Env:     req.Env,
@@ -65,7 +71,7 @@ func NewTask(req schemas.CreateTaskRequest) (*Task, error) {
 	return t, nil
 }
 
-func (t *Task) Start() (string, error) {
+func StartTask(t *schemas.Task) (string, error) {
 	id, err := podman.CreateContainer(t.Spec.Name, t.Command, t.Env)
 	if err != nil {
 		return "", err
