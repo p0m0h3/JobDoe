@@ -36,7 +36,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/task.Task"
+                            "$ref": "#/definitions/schemas.Task"
                         }
                     },
                     "400": {
@@ -80,7 +80,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/task.Task"
+                            "$ref": "#/definitions/schemas.Task"
                         }
                     },
                     "404": {
@@ -200,7 +200,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemas.GetToolResponse"
+                            "$ref": "#/definitions/schemas.Tool"
                         }
                     },
                     "404": {
@@ -267,18 +267,7 @@
                 }
             }
         },
-        "schemas.GetToolResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "spec": {
-                    "$ref": "#/definitions/tsf.Tool"
-                }
-            }
-        },
-        "task.Task": {
+        "schemas.Task": {
             "type": "object",
             "properties": {
                 "cmd": {
@@ -303,6 +292,17 @@
                     "type": "string"
                 },
                 "tool": {
+                    "$ref": "#/definitions/schemas.Tool"
+                }
+            }
+        },
+        "schemas.Tool": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "spec": {
                     "$ref": "#/definitions/tsf.Tool"
                 }
             }

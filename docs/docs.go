@@ -44,7 +44,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/task.Task"
+                            "$ref": "#/definitions/schemas.Task"
                         }
                     },
                     "400": {
@@ -88,7 +88,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/task.Task"
+                            "$ref": "#/definitions/schemas.Task"
                         }
                     },
                     "404": {
@@ -208,7 +208,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemas.GetToolResponse"
+                            "$ref": "#/definitions/schemas.Tool"
                         }
                     },
                     "404": {
@@ -275,18 +275,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schemas.GetToolResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "spec": {
-                    "$ref": "#/definitions/tsf.Tool"
-                }
-            }
-        },
-        "task.Task": {
+        "schemas.Task": {
             "type": "object",
             "properties": {
                 "cmd": {
@@ -311,6 +300,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "tool": {
+                    "$ref": "#/definitions/schemas.Tool"
+                }
+            }
+        },
+        "schemas.Tool": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "spec": {
                     "$ref": "#/definitions/tsf.Tool"
                 }
             }

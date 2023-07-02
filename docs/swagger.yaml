@@ -30,14 +30,7 @@ definitions:
       message:
         type: string
     type: object
-  schemas.GetToolResponse:
-    properties:
-      id:
-        type: string
-      spec:
-        $ref: '#/definitions/tsf.Tool'
-    type: object
-  task.Task:
+  schemas.Task:
     properties:
       cmd:
         items:
@@ -54,6 +47,13 @@ definitions:
       stdin:
         type: string
       tool:
+        $ref: '#/definitions/schemas.Tool'
+    type: object
+  schemas.Tool:
+    properties:
+      id:
+        type: string
+      spec:
         $ref: '#/definitions/tsf.Tool'
     type: object
   tsf.EnvVar:
@@ -146,7 +146,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/task.Task'
+            $ref: '#/definitions/schemas.Task'
         "400":
           description: Bad Request
           schema:
@@ -175,7 +175,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/task.Task'
+            $ref: '#/definitions/schemas.Task'
         "404":
           description: Not Found
           schema:
@@ -254,7 +254,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemas.GetToolResponse'
+            $ref: '#/definitions/schemas.Tool'
         "404":
           description: Not Found
           schema:
