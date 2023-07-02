@@ -32,7 +32,7 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Param        name  path  string  true  "Tool name"
 // @Accept       json
 // @Produce      json
-// @Success      200 {object} schemas.GetToolResponse
+// @Success      200 {object} schemas.Tool
 // @Failure      500 {object} schemas.ErrorResponse
 // @Failure      404 {object} schemas.ErrorResponse
 // @Router       /tool/{name} [get]
@@ -43,9 +43,9 @@ func GetTool(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(
-		schemas.GetToolResponse{
+		schemas.Tool{
 			ID:   strings.TrimSuffix(c.Params("name"), ".toml"),
-			Spec: *tool,
+			Spec: tool,
 		},
 	)
 }

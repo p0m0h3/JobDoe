@@ -42,8 +42,10 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		Command: make([]string, 0),
 		Stdin:   req.Stdin,
 		Env:     req.Env,
-		ToolID:  req.ToolID,
-		Spec:    tool,
+		Tool: schemas.Tool{
+			ID:   req.ToolID,
+			Spec: tool,
+		},
 	}
 
 	modifier, ok := tool.Exe.Modifiers[req.Modifier]
@@ -72,7 +74,7 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 }
 
 func StartTask(t *schemas.Task) (string, error) {
-	id, err := podman.CreateContainer(t.Spec.Name, t.Command, t.Env)
+	id, err := podman.CreateContainer(t.Tool.Spec.Name, t.Command, t.Env)
 	if err != nil {
 		return "", err
 	}
