@@ -1,4 +1,4 @@
-package container
+package podman
 
 import "github.com/containers/podman/v4/pkg/bindings/images"
 

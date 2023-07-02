@@ -5,17 +5,18 @@ import (
 	"strings"
 
 	"fuzz.codes/fuzzercloud/tsf"
-	"fuzz.codes/fuzzercloud/workerengine/container"
-	"fuzz.codes/fuzzercloud/workerengine/tool"
+	"fuzz.codes/fuzzercloud/workerengine/podman"
+	"fuzz.codes/fuzzercloud/workerengine/schemas"
 )
 
 type Task struct {
-	ID         string
-	Image      string
-	Command    []string
-	EnvVarList map[string]string
-	Stdin      string
-	Tool       *tsf.Tool
+	ID      string            `json:"id"`
+	Command []string          `json:"cmd"`
+	Env     map[string]string `json:"env"`
+	Stdin   string            `json:"stdin"`
+	Status  string            `json:"status"`
+	ToolID  string            `json:"toolId"`
+	Spec    *tsf.Tool         `json:"tool"`
 }
 
 var Tasks map[string]*Task = make(map[string]*Task)
@@ -29,14 +30,14 @@ func injectVariables(c []string, p string, v string) {
 	}
 }
 
-func NewTask(req CreateTaskRequest) (*Task, error) {
-	tool := tool.Tools[req.ToolName]
+func NewTask(req schemas.CreateTaskRequest) (*Task, error) {
+	tool := Tools[req.ToolID]
 	t := &Task{
-		Image:      tool.Name,
-		Command:    make([]string, 0),
-		Stdin:      req.Stdin,
-		EnvVarList: req.EnvVarList,
-		Tool:       tool,
+		Command: make([]string, 0),
+		Stdin:   req.Stdin,
+		Env:     req.Env,
+		ToolID:  req.ToolID,
+		Spec:    tool,
 	}
 
 	modifier, ok := tool.Exe.Modifiers[req.Modifier]
@@ -49,7 +50,7 @@ func NewTask(req CreateTaskRequest) (*Task, error) {
 	for _, varPlaceholder := range modifier.Variables {
 		variableName := strings.Trim(varPlaceholder, "{}")
 		found := false
-		for k, v := range req.InputList {
+		for k, v := range req.Inputs {
 			if variableName == k {
 				injectVariables(t.Command, varPlaceholder, v)
 				found = true
@@ -61,14 +62,16 @@ func NewTask(req CreateTaskRequest) (*Task, error) {
 		}
 	}
 
-	Tasks[t.ID] = t
 	return t, nil
 }
 
 func (t *Task) Start() (string, error) {
-	return container.CreateContainer(t.Image, t.Command, t.EnvVarList)
-}
+	id, err := podman.CreateContainer(t.Spec.Name, t.Command, t.Env)
+	if err != nil {
+		return "", err
+	}
+	t.ID = id
 
-func (t *Task) Refresh() error {
-	return nil
+	Tasks[t.ID] = t
+	return id, nil
 }

@@ -1,4 +1,4 @@
-package container
+package podman
 
 import (
 	"errors"

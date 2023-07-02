@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/task.CreateTaskRequest"
+                            "$ref": "#/definitions/schemas.CreateTaskRequest"
                         }
                     }
                 ],
@@ -44,19 +44,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/task.CreateTaskResponse"
+                            "$ref": "#/definitions/task.Task"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/task.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/task.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     }
                 }
@@ -88,19 +88,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/task.GetTaskResponse"
+                            "$ref": "#/definitions/task.Task"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/task.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/task.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     }
                 }
@@ -132,19 +132,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/task.GetTaskResponse"
+                            "type": "string"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/task.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/task.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     }
                 }
@@ -176,7 +176,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/tool.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     }
                 }
@@ -208,19 +208,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tool.GetToolResponse"
+                            "$ref": "#/definitions/schemas.GetToolResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/tool.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/tool.ErrorResponse"
+                            "$ref": "#/definitions/schemas.ErrorResponse"
                         }
                     }
                 }
@@ -228,11 +228,11 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "task.CreateTaskRequest": {
+        "schemas.CreateTaskRequest": {
             "type": "object",
             "required": [
                 "modifier",
-                "name"
+                "toolId"
             ],
             "properties": {
                 "env": {
@@ -250,77 +250,67 @@ const docTemplate = `{
                 "modifier": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
                 "stdin": {
                     "type": "string"
-                }
-            }
-        },
-        "task.CreateTaskResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
                 },
-                "tool": {
+                "toolId": {
                     "type": "string"
                 }
             }
         },
-        "task.ErrorResponse": {
+        "schemas.ErrorResponse": {
             "type": "object",
             "properties": {
                 "code": {
                     "type": "integer"
                 },
-                "message": {
-                    "type": "string"
-                },
-                "validation": {
+                "details": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
+                },
+                "message": {
+                    "type": "string"
                 }
             }
         },
-        "task.GetTaskResponse": {
+        "schemas.GetToolResponse": {
             "type": "object",
             "properties": {
-                "command": {
+                "id": {
+                    "type": "string"
+                },
+                "spec": {
+                    "$ref": "#/definitions/tsf.Tool"
+                }
+            }
+        },
+        "task.Task": {
+            "type": "object",
+            "properties": {
+                "cmd": {
                     "type": "array",
                     "items": {
+                        "type": "string"
+                    }
+                },
+                "env": {
+                    "type": "object",
+                    "additionalProperties": {
                         "type": "string"
                     }
                 },
                 "id": {
-                    "type": "string"
-                },
-                "imageName": {
                     "type": "string"
                 },
                 "status": {
                     "type": "string"
-                }
-            }
-        },
-        "tool.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                }
-            }
-        },
-        "tool.GetToolResponse": {
-            "type": "object",
-            "properties": {
-                "name": {
+                },
+                "stdin": {
                     "type": "string"
                 },
-                "spec": {
+                "tool": {
                     "$ref": "#/definitions/tsf.Tool"
                 }
             }

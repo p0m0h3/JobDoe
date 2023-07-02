@@ -1,12 +1,8 @@
-package tool
+package schemas
 
 import "fuzz.codes/fuzzercloud/tsf"
 
 type GetToolResponse struct {
-	Name string   `json:"name"`
+	ID   string   `json:"id"`
 	Spec tsf.Tool `json:"spec"`
-}
-
-type ErrorResponse struct {
-	Code int `json:"code"`
 }

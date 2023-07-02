@@ -5,10 +5,10 @@ import (
 	"log"
 	"os"
 
-	"fuzz.codes/fuzzercloud/workerengine/container"
 	_ "fuzz.codes/fuzzercloud/workerengine/docs"
+	"fuzz.codes/fuzzercloud/workerengine/handlers"
+	"fuzz.codes/fuzzercloud/workerengine/podman"
 	"fuzz.codes/fuzzercloud/workerengine/task"
-	"fuzz.codes/fuzzercloud/workerengine/tool"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -27,7 +27,9 @@ var Mode string
 // @name Authorization
 // @BasePath /
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: handlers.ErrorHandler,
+	})
 
 	app.Use(logger.New())
 
@@ -44,10 +46,11 @@ func main() {
 		}))
 	}
 
-	container.OpenConnection(os.Getenv("PODMAN_SOCKET_ADDRESS"))
+	podman.OpenConnection(os.Getenv("PODMAN_SOCKET_ADDRESS"))
 
-	tool.RegisterRoutes(app)
-	task.RegisterRoutes(app)
+	task.ReadTools()
+
+	RegisterRoutes(app)
 
 	log.Fatal(app.Listen(os.Getenv("LISTEN_ON")))
 }

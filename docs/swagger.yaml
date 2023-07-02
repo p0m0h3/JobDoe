@@ -1,5 +1,5 @@
 definitions:
-  task.CreateTaskRequest:
+  schemas.CreateTaskRequest:
     properties:
       env:
         additionalProperties:
@@ -11,55 +11,49 @@ definitions:
         type: object
       modifier:
         type: string
-      name:
-        type: string
       stdin:
+        type: string
+      toolId:
         type: string
     required:
     - modifier
-    - name
+    - toolId
     type: object
-  task.CreateTaskResponse:
-    properties:
-      id:
-        type: string
-      tool:
-        type: string
-    type: object
-  task.ErrorResponse:
+  schemas.ErrorResponse:
     properties:
       code:
         type: integer
+      details:
+        items:
+          type: string
+        type: array
       message:
         type: string
-      validation:
-        items:
-          type: string
-        type: array
     type: object
-  task.GetTaskResponse:
+  schemas.GetToolResponse:
     properties:
-      command:
-        items:
-          type: string
-        type: array
       id:
         type: string
-      imageName:
+      spec:
+        $ref: '#/definitions/tsf.Tool'
+    type: object
+  task.Task:
+    properties:
+      cmd:
+        items:
+          type: string
+        type: array
+      env:
+        additionalProperties:
+          type: string
+        type: object
+      id:
         type: string
       status:
         type: string
-    type: object
-  tool.ErrorResponse:
-    properties:
-      code:
-        type: integer
-    type: object
-  tool.GetToolResponse:
-    properties:
-      name:
+      stdin:
         type: string
-      spec:
+      tool:
         $ref: '#/definitions/tsf.Tool'
     type: object
   tsf.EnvVar:
@@ -145,22 +139,22 @@ paths:
         name: task
         required: true
         schema:
-          $ref: '#/definitions/task.CreateTaskRequest'
+          $ref: '#/definitions/schemas.CreateTaskRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/task.CreateTaskResponse'
+            $ref: '#/definitions/task.Task'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/task.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/task.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
       summary: Create a new task
       tags:
       - tasks
@@ -181,15 +175,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/task.GetTaskResponse'
+            $ref: '#/definitions/task.Task'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/task.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/task.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
       summary: Get the details of a task
       tags:
       - tasks
@@ -210,15 +204,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/task.GetTaskResponse'
+            type: string
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/task.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/task.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
       summary: Get the details of a task
       tags:
       - tasks
@@ -239,7 +233,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/tool.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
       summary: Get all available tools
       tags:
       - tools
@@ -260,15 +254,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tool.GetToolResponse'
+            $ref: '#/definitions/schemas.GetToolResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/tool.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/tool.ErrorResponse'
+            $ref: '#/definitions/schemas.ErrorResponse'
       summary: Get available tool by name
       tags:
       - tools

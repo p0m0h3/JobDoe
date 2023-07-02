@@ -1,8 +1,10 @@
-package tool
+package handlers
 
 import (
 	"strings"
 
+	"fuzz.codes/fuzzercloud/workerengine/schemas"
+	"fuzz.codes/fuzzercloud/workerengine/task"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -13,11 +15,11 @@ import (
 // @Accept       json
 // @Produce      json
 // @Success      200 {array} string
-// @Failure      500 {object} ErrorResponse
+// @Failure      500 {object} schemas.ErrorResponse
 // @Router       /tool/ [get]
 func GetAllTools(c *fiber.Ctx) error {
 	result := make([]string, 0)
-	for name := range Tools {
+	for name := range task.Tools {
 		result = append(result, name)
 	}
 	return c.JSON(result)
@@ -30,21 +32,19 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Param        name  path  string  true  "Tool name"
 // @Accept       json
 // @Produce      json
-// @Success      200 {object} GetToolResponse
-// @Failure      500 {object} ErrorResponse
-// @Failure      404 {object} ErrorResponse
+// @Success      200 {object} schemas.GetToolResponse
+// @Failure      500 {object} schemas.ErrorResponse
+// @Failure      404 {object} schemas.ErrorResponse
 // @Router       /tool/{name} [get]
 func GetTool(c *fiber.Ctx) error {
-	tool, ok := Tools[c.Params("name")]
+	tool, ok := task.Tools[c.Params("name")]
 	if !ok {
-		return c.Status(fiber.StatusNotFound).JSON(ErrorResponse{
-			Code: fiber.StatusNotFound,
-		})
+		return NotFoundError(c)
 	}
 
 	return c.JSON(
-		GetToolResponse{
-			Name: strings.TrimSuffix(c.Params("name"), ".toml"),
+		schemas.GetToolResponse{
+			ID:   strings.TrimSuffix(c.Params("name"), ".toml"),
 			Spec: *tool,
 		},
 	)
