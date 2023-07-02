@@ -18,7 +18,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        task body schemas.CreateTaskRequest true "new task data"
-// @Success      200 {object} task.Task
+// @Success      200 {object} schemas.Task
 // @Failure      400 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /task/ [post]
@@ -56,7 +56,7 @@ func CreateTask(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Param        id path string true "task id"
-// @Success      200 {object} task.Task
+// @Success      200 {object} schemas.Task
 // @Failure      404 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /task/{id} [get]
