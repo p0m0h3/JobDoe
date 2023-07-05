@@ -74,12 +74,23 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 }
 
 func StartTask(t *schemas.Task) (string, error) {
-	id, err := podman.CreateContainer(t.Tool.Spec.Name, t.Command, t.Env)
+	c, err := podman.CreateContainer(t.Tool.Spec.Name, t.Command, t.Env)
 	if err != nil {
 		return "", err
 	}
-	t.ID = id
+
+	t.ID = c.ID
+	UpdateTask(t)
 
 	Tasks[t.ID] = t
-	return id, nil
+	return c.ID, nil
+}
+
+func UpdateTask(t *schemas.Task) error {
+	c, err := podman.InspectContainer(t.ID)
+	if err != nil {
+		return err
+	}
+	t.Status = c.State.Status
+	return nil
 }

@@ -62,6 +62,7 @@ func CreateTask(c *fiber.Ctx) error {
 // @Router       /task/{id} [get]
 func GetTask(c *fiber.Ctx) error {
 	result, ok := state.Tasks[c.Params("id")]
+	state.UpdateTask(result)
 	if !ok {
 		return NotFoundError(c)
 	}
