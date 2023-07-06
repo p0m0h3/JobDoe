@@ -232,10 +232,16 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "modifier",
-                "toolId"
+                "tool"
             ],
             "properties": {
                 "env": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "files": {
                     "type": "object",
                     "additionalProperties": {
                         "type": "string"
@@ -253,7 +259,7 @@ const docTemplate = `{
                 "stdin": {
                     "type": "string"
                 },
-                "toolId": {
+                "tool": {
                     "type": "string"
                 }
             }
@@ -290,17 +296,17 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "files": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },
                 "status": {
                     "type": "string"
-                },
-                "stdin": {
-                    "type": "string"
-                },
-                "tool": {
-                    "$ref": "#/definitions/schemas.Tool"
                 }
             }
         },

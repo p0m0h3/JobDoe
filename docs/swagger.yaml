@@ -5,6 +5,10 @@ definitions:
         additionalProperties:
           type: string
         type: object
+      files:
+        additionalProperties:
+          type: string
+        type: object
       inputs:
         additionalProperties:
           type: string
@@ -13,11 +17,11 @@ definitions:
         type: string
       stdin:
         type: string
-      toolId:
+      tool:
         type: string
     required:
     - modifier
-    - toolId
+    - tool
     type: object
   schemas.ErrorResponse:
     properties:
@@ -40,14 +44,14 @@ definitions:
         additionalProperties:
           type: string
         type: object
+      files:
+        additionalProperties:
+          type: string
+        type: object
       id:
         type: string
       status:
         type: string
-      stdin:
-        type: string
-      tool:
-        $ref: '#/definitions/schemas.Tool'
     type: object
   schemas.Tool:
     properties:

@@ -1,8 +1,8 @@
 package schemas
 
 type CreateTaskRequest struct {
-	ToolID   string            `json:"toolId" validate:"required"`
-	Modifier string            `json:"modifier" validate:"required"`
+	ToolID   string            `json:"tool" validate:"required,ascii"`
+	Modifier string            `json:"modifier" validate:"required,ascii"`
 	Inputs   map[string]string `json:"inputs"`
 	Env      map[string]string `json:"env"`
 	Stdin    string            `json:"stdin"`
