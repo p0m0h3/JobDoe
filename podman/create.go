@@ -23,9 +23,13 @@ func CreateContainer(
 	if err != nil {
 		return nil, err
 	}
-	if err := containers.Start(Connection, createResponse.ID, nil); err != nil {
-		return nil, err
-	}
 
 	return &createResponse, nil
+}
+
+func StartContainer(id string) error {
+	if err := containers.Start(Connection, id, nil); err != nil {
+		return err
+	}
+	return nil
 }
