@@ -18,7 +18,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        task body schemas.CreateTaskRequest true "new task data"
-// @Success      200 {object} schemas.Task
+// @Success      201 {object} schemas.Task
 // @Failure      400 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /task/ [post]
@@ -46,7 +46,7 @@ func CreateTask(c *fiber.Ctx) error {
 
 	task.ID = id
 
-	return c.JSON(task)
+	return c.Status(fiber.StatusCreated).JSON(task)
 }
 
 // GetTask godoc
