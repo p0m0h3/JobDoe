@@ -2,6 +2,7 @@
 [Unit]
 Description=Workerengine task execution
 After=network.target
+Wants=podman.socket
 
 [Service]
 Type=simple
