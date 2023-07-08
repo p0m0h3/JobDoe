@@ -121,3 +121,42 @@ func StreamTaskOutput(c *websocket.Conn) {
 		c.WriteMessage(1, []byte(frame))
 	}
 }
+
+// GetTaskStats godoc
+// @Summary      Task statistics
+// @Description  Get the resource usage of a task
+// @Tags         tasks
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "task id"
+// @Success      200 {object} string
+// @Failure      404 {object} schemas.ErrorResponse
+// @Failure      500 {object} schemas.ErrorResponse
+// @Router       /task/{id}/stats [get]
+func GetTaskStats(c *fiber.Ctx) error {
+	t, ok := state.Tasks[c.Params("id")]
+	if !ok {
+		return NotFoundError(c)
+	}
+	data, err := podman.GetContainerStats(t.ID)
+	if err != nil || len(data.Stats) < 1 {
+		return InternalServerError(c)
+	}
+
+	stats := data.Stats[0]
+
+	return c.JSON(schemas.GetTaskStatsResponse{
+		ID:          stats.ContainerID,
+		AvgCPU:      stats.AvgCPU,
+		CPU:         stats.CPU,
+		MemUsage:    stats.MemUsage,
+		MemLimit:    stats.MemLimit,
+		MemPerc:     stats.MemPerc,
+		NetInput:    stats.NetInput,
+		NetOutput:   stats.NetOutput,
+		BlockInput:  stats.BlockInput,
+		BlockOutput: stats.BlockOutput,
+		UpTime:      stats.UpTime,
+		Duration:    stats.Duration,
+	})
+}

@@ -21,3 +21,12 @@ func GetAllContainers() ([]entities.ListContainer, error) {
 		All: &all,
 	})
 }
+
+func GetContainerStats(id string) (entities.ContainerStatsReport, error) {
+	c, err := containers.Stats(Connection, []string{id}, nil)
+	if err != nil {
+		return entities.ContainerStatsReport{}, err
+	}
+
+	return <-c, nil
+}
