@@ -108,10 +108,13 @@ func StartTask(t *schemas.Task) (string, error) {
 
 	err = copyTaskFilesToContainer(t, c.ID)
 	if err != nil {
-		return "", err
+		return c.ID, err
 	}
 
-	UpdateTask(t)
+	err = UpdateTask(t)
+	if err != nil {
+		return t.ID, err
+	}
 
 	err = podman.StartContainer(t.ID)
 	if err != nil {
