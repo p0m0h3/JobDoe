@@ -69,6 +69,29 @@ func GetTask(c *fiber.Ctx) error {
 	return c.JSON(result)
 }
 
+// DeleteTask godoc
+// @Summary      Delete a task
+// @Description  Delete a task's data and container
+// @Tags         tasks
+// @Accept       json
+// @Produce      plain
+// @Param        id path string true "task id"
+// @Success      204
+// @Failure      404 {object} schemas.ErrorResponse
+// @Router       /task/{id} [delete]
+func DeleteTask(c *fiber.Ctx) error {
+	result, ok := state.Tasks[c.Params("id")]
+	if !ok {
+		return NotFoundError(c)
+	}
+
+	if err := podman.DeleteContainer(result.ID); err != nil {
+		return InternalServerError(c)
+	}
+
+	return c.Status(fiber.StatusNoContent).SendString("")
+}
+
 // GetTaskOutput godoc
 // @Summary      Get the details of a task
 // @Description  Returns the details of a task
@@ -183,5 +206,7 @@ func WaitOnTask(c *fiber.Ctx) error {
 		return InternalServerError(c)
 	}
 
-	return c.SendString("")
+	state.UpdateTask(t)
+
+	return c.JSON(t)
 }
