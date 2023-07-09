@@ -163,6 +163,28 @@ paths:
       tags:
       - tasks
   /task/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a task's data and container
+      parameters:
+      - description: task id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+      summary: Delete a task
+      tags:
+      - tasks
     get:
       consumes:
       - application/json
