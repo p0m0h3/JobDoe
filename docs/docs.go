@@ -194,6 +194,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/task/{id}/wait": {
+            "get": {
+                "description": "Return when a task state is changed to exited",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Wait on task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "task id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/tool/": {
             "get": {
                 "description": "Get the name of all available tools",

@@ -249,6 +249,35 @@ paths:
       summary: Get the details of a task
       tags:
       - tasks
+  /task/{id}/wait:
+    get:
+      consumes:
+      - application/json
+      description: Return when a task state is changed to exited
+      parameters:
+      - description: task id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+      summary: Wait on task
+      tags:
+      - tasks
   /tool/:
     get:
       consumes:

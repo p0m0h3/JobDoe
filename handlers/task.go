@@ -160,3 +160,28 @@ func GetTaskStats(c *fiber.Ctx) error {
 		Duration:    stats.Duration,
 	})
 }
+
+// WaitOnTask godoc
+// @Summary      Wait on task
+// @Description  Return when a task state is changed to exited
+// @Tags         tasks
+// @Accept       json
+// @Produce      plain
+// @Param        id path string true "task id"
+// @Success      200 {object} string
+// @Failure      500 {object} schemas.ErrorResponse
+// @Failure      404 {object} schemas.ErrorResponse
+// @Router       /task/{id}/wait [get]
+func WaitOnTask(c *fiber.Ctx) error {
+	t, ok := state.Tasks[c.Params("id")]
+	if !ok {
+		return NotFoundError(c)
+	}
+
+	err := podman.WaitOnContainer(t.ID)
+	if err != nil {
+		return InternalServerError(c)
+	}
+
+	return c.SendString("")
+}

@@ -30,3 +30,11 @@ func GetContainerStats(id string) (entities.ContainerStatsReport, error) {
 
 	return <-c, nil
 }
+
+func WaitOnContainer(id string) error {
+	options := &containers.WaitOptions{
+		Condition: []define.ContainerStatus{define.ContainerStateExited},
+	}
+	_, err := containers.Wait(Connection, id, options)
+	return err
+}
