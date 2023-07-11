@@ -3,7 +3,7 @@ module fuzz.codes/fuzzercloud/workerengine
 go 1.19
 
 require (
-	fuzz.codes/fuzzercloud/tsf v0.0.0-20230619142454-7b76a8492f2e
+	fuzz.codes/fuzzercloud/tsf v0.0.0-20230711072520-2c033709e8f7
 	github.com/containers/podman/v4 v4.5.1
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/gofiber/contrib/websocket v1.0.0
@@ -15,7 +15,7 @@ require (
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
-	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/Microsoft/hcsshim v0.10.0-rc.7 // indirect
