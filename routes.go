@@ -12,6 +12,7 @@ func RegisterRoutes(app *fiber.App) {
 	task.Get("/", handlers.GetAllTasks)
 	task.Get("/:id", handlers.GetTask)
 	task.Delete("/:id", handlers.DeleteTask)
+	task.Delete("/", handlers.PruneTasks)
 	task.Get("/:id/stdout", handlers.GetTaskOutput)
 	task.Get("/:id/stream", websocket.New(handlers.StreamTaskOutput))
 	task.Get("/:id/stats", handlers.GetTaskStats)

@@ -54,6 +54,10 @@ func ReadTasks() error {
 	return nil
 }
 
+func ResetTasks() {
+	Tasks = make(map[string]*schemas.Task)
+}
+
 func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	tool, ok := Tools[req.ToolID]
 	if !ok {

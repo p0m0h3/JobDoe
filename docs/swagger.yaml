@@ -133,6 +133,18 @@ info:
   version: "1.0"
 paths:
   /task:
+    delete:
+      consumes:
+      - application/json
+      description: Prune the data and container of all stopped/exited tasks
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: No Content
+      summary: Prune all stopped/exited tasks
+      tags:
+      - tasks
     get:
       consumes:
       - application/json

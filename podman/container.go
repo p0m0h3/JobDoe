@@ -45,6 +45,11 @@ func DeleteContainer(id string) error {
 	return nil
 }
 
+func PruneTasks() error {
+	_, err := containers.Prune(Connection, nil)
+	return err
+}
+
 func StartContainer(id string) error {
 	if err := containers.Start(Connection, id, nil); err != nil {
 		return err

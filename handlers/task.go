@@ -101,6 +101,22 @@ func DeleteTask(c *fiber.Ctx) error {
 		return InternalServerError(c)
 	}
 
+	delete(state.Tasks, result.ID)
+
+	return c.Status(fiber.StatusNoContent).SendString("")
+}
+
+// PruneTasks godoc
+// @Summary      Prune all stopped/exited tasks
+// @Description  Prune the data and container of all stopped/exited tasks
+// @Tags         tasks
+// @Accept       json
+// @Produce      plain
+// @Success      204
+// @Router       /task [delete]
+func PruneTasks(c *fiber.Ctx) error {
+	podman.PruneTasks()
+	state.ResetTasks()
 	return c.Status(fiber.StatusNoContent).SendString("")
 }
 
