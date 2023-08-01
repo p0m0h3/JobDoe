@@ -79,9 +79,9 @@ definitions:
   tsf.IOType:
     enum:
     - 0
-    - 0
-    - 0
-    - 0
+    - 1
+    - 2
+    - 3
     type: integer
     x-enum-varnames:
     - FILE
@@ -132,6 +132,21 @@ info:
   title: WorkerEngine API
   version: "1.0"
 paths:
+  /task:
+    get:
+      consumes:
+      - application/json
+      description: Returns all identified tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Task'
+      summary: Get a list of all tasks
+      tags:
+      - tasks
   /task/:
     post:
       consumes:

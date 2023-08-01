@@ -16,6 +16,29 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/task": {
+            "get": {
+                "description": "Returns all identified tasks",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get a list of all tasks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.Task"
+                        }
+                    }
+                }
+            }
+        },
         "/task/": {
             "post": {
                 "description": "Start a new sandbox with a tool running inside",
@@ -471,9 +494,9 @@ const docTemplate = `{
             "type": "integer",
             "enum": [
                 0,
-                0,
-                0,
-                0
+                1,
+                2,
+                3
             ],
             "x-enum-varnames": [
                 "FILE",

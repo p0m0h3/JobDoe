@@ -9,6 +9,7 @@ import (
 func RegisterRoutes(app *fiber.App) {
 	task := app.Group("/task")
 	task.Post("/", handlers.CreateTask)
+	task.Get("/", handlers.GetAllTasks)
 	task.Get("/:id", handlers.GetTask)
 	task.Delete("/:id", handlers.DeleteTask)
 	task.Get("/:id/stdout", handlers.GetTaskOutput)

@@ -49,6 +49,18 @@ func CreateTask(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(task)
 }
 
+// GetAllTasks godoc
+// @Summary      Get a list of all tasks
+// @Description  Returns all identified tasks
+// @Tags         tasks
+// @Accept       json
+// @Produce      json
+// @Success      200 {object} schemas.Task
+// @Router       /task [get]
+func GetAllTasks(c *fiber.Ctx) error {
+	return c.JSON(state.Tasks)
+}
+
 // GetTask godoc
 // @Summary      Get the details of a task
 // @Description  Returns the details of a task
