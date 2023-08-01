@@ -1,6 +1,8 @@
 package state
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -19,14 +21,16 @@ func ReadTools() error {
 		if strings.HasSuffix(toolFile.Name(), ".toml") {
 			data, err := os.ReadFile(os.Getenv("TOOLS_DIRECTORY") + "/" + toolFile.Name())
 			if err != nil {
-				panic(err.Error() + " (Error opening file " + toolFile.Name() + ")")
+				log.Println(fmt.Errorf("%v (Error reading file %s)", err, toolFile.Name()))
 			}
 
 			tool, err := tsf.Parse(data)
 			if err != nil {
-				panic(err.Error() + " (Error parsing tsf file " + toolFile.Name() + ")")
+				log.Println(fmt.Errorf("%v (Error parsing TSF file %s)", err, toolFile.Name()))
 			}
-			Tools[strings.TrimSuffix(toolFile.Name(), ".toml")] = tool
+			if err == nil {
+				Tools[strings.TrimSuffix(toolFile.Name(), ".toml")] = tool
+			}
 		}
 	}
 
