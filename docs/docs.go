@@ -226,7 +226,7 @@ const docTemplate = `{
         },
         "/task/{id}/stdout": {
             "get": {
-                "description": "Returns the details of a task",
+                "description": "Get the stdout of a container in plaintext",
                 "consumes": [
                     "application/json"
                 ],
@@ -236,7 +236,7 @@ const docTemplate = `{
                 "tags": [
                     "tasks"
                 ],
-                "summary": "Get the details of a task",
+                "summary": "Get the stdout of a container",
                 "parameters": [
                     {
                         "type": "string",

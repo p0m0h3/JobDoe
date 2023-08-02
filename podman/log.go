@@ -33,3 +33,16 @@ func GetContainerLog(id string, output chan string) error {
 
 	return nil
 }
+
+func StreamContainerLog(id string, output chan string) error {
+	True := true
+	err := containers.Logs(Connection, id, &containers.LogOptions{
+		Follow: &True,
+	}, output, output)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

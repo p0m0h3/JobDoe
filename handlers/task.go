@@ -121,8 +121,8 @@ func PruneTasks(c *fiber.Ctx) error {
 }
 
 // GetTaskOutput godoc
-// @Summary      Get the details of a task
-// @Description  Returns the details of a task
+// @Summary      Get the stdout of a container
+// @Description  Get the stdout of a container in plaintext
 // @Tags         tasks
 // @Accept       json
 // @Produce      plain
@@ -162,14 +162,33 @@ func GetTaskOutput(c *fiber.Ctx) error {
 }
 
 func StreamTaskOutput(c *websocket.Conn) {
-	output := make(chan string, 1024)
-	err := podman.GetContainerLog(c.Params("id"), output)
-	if err != nil {
+	t, ok := state.Tasks[c.Params("id")]
+	if !ok {
 		c.WriteMessage(1, []byte(fiber.ErrNotFound.Message))
+		c.Close()
 	}
 
-	for frame := range output {
-		c.WriteMessage(1, []byte(frame))
+	var err error
+	output := make(chan string, 1024)
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		err = podman.StreamContainerLog(t.ID, output)
+		cancel()
+	}()
+
+	if err != nil {
+		c.WriteMessage(1, []byte(fiber.ErrNotFound.Message))
+		c.Close()
+	}
+
+	for {
+		select {
+		case <-ctx.Done():
+			c.Close()
+		case line := <-output:
+			c.WriteMessage(1, []byte(line))
+		}
 	}
 }
 
