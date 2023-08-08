@@ -18,7 +18,7 @@ type Task struct {
 	Stdin   string            `json:"-"`
 	Status  string            `json:"status"`
 	Tool    Tool              `json:"-"`
-	Files   string            `json:"files"`
+	Files   string            `json:"-"`
 }
 
 type GetTaskStatsResponse struct {

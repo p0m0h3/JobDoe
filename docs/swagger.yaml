@@ -42,8 +42,6 @@ definitions:
         additionalProperties:
           type: string
         type: object
-      files:
-        type: string
       id:
         type: string
       status:

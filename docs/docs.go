@@ -461,9 +461,6 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
-                "files": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "string"
                 },
