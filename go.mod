@@ -3,7 +3,7 @@ module fuzz.codes/fuzzercloud/workerengine
 go 1.19
 
 require (
-	fuzz.codes/fuzzercloud/tsf v0.0.0-20230711072520-2c033709e8f7
+	fuzz.codes/fuzzercloud/tsf v0.0.0-20230808223915-1e18d66cabd9
 	github.com/containers/podman/v4 v4.5.1
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/gofiber/contrib/websocket v1.0.0

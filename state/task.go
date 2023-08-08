@@ -3,6 +3,7 @@ package state
 import (
 	b64 "encoding/base64"
 	"errors"
+	"fmt"
 	"strings"
 
 	"fuzz.codes/fuzzercloud/tsf"
@@ -10,9 +11,11 @@ import (
 	"fuzz.codes/fuzzercloud/workerengine/schemas"
 )
 
+const FILES_PREFIX = "/files/"
+
 var Tasks map[string]*schemas.Task
 
-func injectVariables(c []string, p string, v string) {
+func injectVariable(c []string, p string, v string) {
 	for i, slice := range c {
 		if strings.Contains(slice, p) {
 			c[i] = strings.ReplaceAll(c[i], p, v)
@@ -20,21 +23,9 @@ func injectVariables(c []string, p string, v string) {
 	}
 }
 
-func copyTaskFilesToContainer(t *schemas.Task, cid string) error {
-	for name, data := range t.Files {
-		for _, v := range t.Tool.Spec.Inputs {
-			if name == v.Name && v.Type == tsf.FILE {
-				reader := b64.NewDecoder(b64.StdEncoding, strings.NewReader(data))
-				err := podman.CopyFileIntoContainer(t.ID, reader, "/"+name)
-				if err != nil {
-					return err
-				}
-				break
-			}
-		}
-	}
-
-	return nil
+func copyTaskFilesIntoContainer(t *schemas.Task, cid string) error {
+	reader := b64.NewDecoder(b64.StdEncoding, strings.NewReader(t.Files))
+	return podman.CopyTarIntoContainer(t.ID, reader, FILES_PREFIX)
 }
 
 func ReadTasks() error {
@@ -80,21 +71,19 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	}
 	t.Command = append(t.Command, tool.Exe.Command)
 
-	modifierTokens := strings.Split(modifier.String, " ")
+	modifierTokens := strings.Split(modifier, " ")
 	t.Command = append(t.Command, modifierTokens...)
 
-	for _, varPlaceholder := range modifier.Variables {
-		variableName := strings.Trim(varPlaceholder, "{}")
-		found := false
+	for _, iovar := range tool.Inputs {
 		for k, v := range req.Inputs {
-			if variableName == k {
-				injectVariables(t.Command, varPlaceholder, v)
-				found = true
+			if iovar.Name == k {
+				if iovar.Type == tsf.STRING {
+					injectVariable(t.Command, fmt.Sprint("{", k, "}"), v)
+				} else if iovar.Type == tsf.FILE {
+					injectVariable(t.Command, fmt.Sprint("{", k, "}"), fmt.Sprint(FILES_PREFIX, v))
+				}
 				break
 			}
-		}
-		if !found {
-			return t, errors.New("could not satisfy command variables")
 		}
 	}
 
@@ -110,7 +99,7 @@ func StartTask(t *schemas.Task) (string, error) {
 	t.ID = c.ID
 	Tasks[t.ID] = t
 
-	err = copyTaskFilesToContainer(t, c.ID)
+	err = copyTaskFilesIntoContainer(t, c.ID)
 	if err != nil {
 		return c.ID, err
 	}
