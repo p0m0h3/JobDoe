@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"strconv"
 	"strings"
 
 	"fuzz.codes/fuzzercloud/workerengine/podman"
@@ -120,29 +121,35 @@ func PruneTasks(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNoContent).SendString("")
 }
 
-// GetTaskOutput godoc
-// @Summary      Get the stdout of a container
-// @Description  Get the stdout of a container in plaintext
+// GetTaskLog godoc
+// @Summary      Get the stdout/stderr of a exited task
+// @Description  Get the stdout/stderr of an exited task in plaintext
 // @Tags         tasks
 // @Accept       json
 // @Produce      plain
 // @Param        id path string true "task id"
+// @Param        stderr query bool false "should include stderr"
 // @Success      200 {object} string
 // @Failure      404 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /task/{id}/stdout [get]
-func GetTaskOutput(c *fiber.Ctx) error {
+// @Router       /task/{id}/log [get]
+func GetTaskLog(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
 		return NotFoundError(c)
 	}
 
-	var err error
+	stderr, err := strconv.ParseBool(c.Query("stderr", "false"))
+	if err != nil {
+		return BadRequestError(c, []string{"stderr query parameter couldn't be parsed"})
+	}
+
 	output := make(chan string, 1024)
+
 	ctx, cancel := context.WithCancel(context.Background())
 
 	go func() {
-		err = podman.GetContainerLog(t.ID, output)
+		err = podman.GetContainerLog(t.ID, stderr, output)
 		cancel()
 	}()
 
@@ -161,7 +168,7 @@ func GetTaskOutput(c *fiber.Ctx) error {
 	}
 }
 
-func StreamTaskOutput(c *websocket.Conn) {
+func StreamTaskLog(c *websocket.Conn) {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
 		c.WriteMessage(1, []byte(fiber.ErrNotFound.Message))
@@ -173,7 +180,7 @@ func StreamTaskOutput(c *websocket.Conn) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	go func() {
-		err = podman.StreamContainerLog(t.ID, output)
+		err = podman.StreamContainerLog(t.ID, true, output)
 		cancel()
 	}()
 

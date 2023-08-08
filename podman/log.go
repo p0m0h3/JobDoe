@@ -7,7 +7,7 @@ import (
 	"github.com/containers/podman/v4/pkg/bindings/containers"
 )
 
-func GetContainerLog(id string, output chan string) error {
+func GetContainerLog(id string, stderr bool, output chan string) error {
 	con, err := InspectContainer(id)
 	if err != nil {
 		return err
@@ -25,7 +25,8 @@ func GetContainerLog(id string, output chan string) error {
 	follow := false
 	err = containers.Logs(Connection, id, &containers.LogOptions{
 		Follow: &follow,
-	}, output, nil)
+		Stderr: &stderr,
+	}, output, output)
 
 	if err != nil {
 		return err
@@ -34,10 +35,11 @@ func GetContainerLog(id string, output chan string) error {
 	return nil
 }
 
-func StreamContainerLog(id string, output chan string) error {
+func StreamContainerLog(id string, stderr bool, output chan string) error {
 	True := true
 	err := containers.Logs(Connection, id, &containers.LogOptions{
 		Follow: &True,
+		Stderr: &stderr,
 	}, output, output)
 
 	if err != nil {

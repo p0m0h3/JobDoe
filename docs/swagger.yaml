@@ -6,9 +6,7 @@ definitions:
           type: string
         type: object
       files:
-        additionalProperties:
-          type: string
-        type: object
+        type: string
       inputs:
         additionalProperties:
           type: string
@@ -45,9 +43,7 @@ definitions:
           type: string
         type: object
       files:
-        additionalProperties:
-          type: string
-        type: object
+        type: string
       id:
         type: string
       status:
@@ -71,7 +67,7 @@ definitions:
         type: string
       modifiers:
         additionalProperties:
-          $ref: '#/definitions/tsf.Modifier'
+          type: string
         type: object
       stdin:
         type: boolean
@@ -94,15 +90,6 @@ definitions:
         type: string
       type:
         $ref: '#/definitions/tsf.IOType'
-    type: object
-  tsf.Modifier:
-    properties:
-      string:
-        type: string
-      variables:
-        items:
-          type: string
-        type: array
     type: object
   tsf.Tool:
     properties:
@@ -240,6 +227,39 @@ paths:
       summary: Get the details of a task
       tags:
       - tasks
+  /task/{id}/log:
+    get:
+      consumes:
+      - application/json
+      description: Get the stdout/stderr of an exited task in plaintext
+      parameters:
+      - description: task id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: should include stderr
+        in: query
+        name: stderr
+        type: boolean
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+      summary: Get the stdout/stderr of a exited task
+      tags:
+      - tasks
   /task/{id}/stats:
     get:
       consumes:
@@ -267,35 +287,6 @@ paths:
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
       summary: Task statistics
-      tags:
-      - tasks
-  /task/{id}/stdout:
-    get:
-      consumes:
-      - application/json
-      description: Get the stdout of a container in plaintext
-      parameters:
-      - description: task id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - text/plain
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.ErrorResponse'
-      summary: Get the stdout of a container
       tags:
       - tasks
   /task/{id}/wait:

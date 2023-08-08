@@ -180,19 +180,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/stats": {
+        "/task/{id}/log": {
             "get": {
-                "description": "Get the resource usage of a task",
+                "description": "Get the stdout/stderr of an exited task in plaintext",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
-                    "application/json"
+                    "text/plain"
                 ],
                 "tags": [
                     "tasks"
                 ],
-                "summary": "Task statistics",
+                "summary": "Get the stdout/stderr of a exited task",
                 "parameters": [
                     {
                         "type": "string",
@@ -200,6 +200,12 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "should include stderr",
+                        "name": "stderr",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -224,19 +230,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/stdout": {
+        "/task/{id}/stats": {
             "get": {
-                "description": "Get the stdout of a container in plaintext",
+                "description": "Get the resource usage of a task",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
-                    "text/plain"
+                    "application/json"
                 ],
                 "tags": [
                     "tasks"
                 ],
-                "summary": "Get the stdout of a container",
+                "summary": "Task statistics",
                 "parameters": [
                     {
                         "type": "string",
@@ -404,10 +410,7 @@ const docTemplate = `{
                     }
                 },
                 "files": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "inputs": {
                     "type": "object",
@@ -459,10 +462,7 @@ const docTemplate = `{
                     }
                 },
                 "files": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "id": {
                     "type": "string"
@@ -500,7 +500,7 @@ const docTemplate = `{
                 "modifiers": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/tsf.Modifier"
+                        "type": "string"
                     }
                 },
                 "stdin": {
@@ -531,20 +531,6 @@ const docTemplate = `{
                 },
                 "type": {
                     "$ref": "#/definitions/tsf.IOType"
-                }
-            }
-        },
-        "tsf.Modifier": {
-            "type": "object",
-            "properties": {
-                "string": {
-                    "type": "string"
-                },
-                "variables": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
                 }
             }
         },
