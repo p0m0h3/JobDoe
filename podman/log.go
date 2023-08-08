@@ -25,11 +25,19 @@ func GetContainerLog(id string, stderr bool, output chan string) error {
 	follow := false
 	err = containers.Logs(Connection, id, &containers.LogOptions{
 		Follow: &follow,
-		Stderr: &stderr,
-	}, output, output)
-
+	}, output, nil)
 	if err != nil {
 		return err
+	}
+
+	if stderr {
+		err = containers.Logs(Connection, id, &containers.LogOptions{
+			Follow: &follow,
+			Stderr: &stderr,
+		}, nil, output)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -39,9 +47,15 @@ func StreamContainerLog(id string, stderr bool, output chan string) error {
 	True := true
 	err := containers.Logs(Connection, id, &containers.LogOptions{
 		Follow: &True,
-		Stderr: &stderr,
-	}, output, output)
+	}, output, nil)
+	if err != nil {
+		return err
+	}
 
+	err = containers.Logs(Connection, id, &containers.LogOptions{
+		Follow: &True,
+		Stderr: &stderr,
+	}, nil, output)
 	if err != nil {
 		return err
 	}
