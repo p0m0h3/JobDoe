@@ -421,9 +421,6 @@ const docTemplate = `{
                 "modifier": {
                     "type": "string"
                 },
-                "stdin": {
-                    "type": "string"
-                },
                 "tool": {
                     "type": "string"
                 }

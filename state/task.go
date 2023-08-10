@@ -56,7 +56,6 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	}
 	t := &schemas.Task{
 		Command: make([]string, 0),
-		Stdin:   req.Stdin,
 		Env:     req.Env,
 		Tool: schemas.Tool{
 			ID:   req.ToolID,
