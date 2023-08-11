@@ -11,7 +11,10 @@ import (
 	"fuzz.codes/fuzzercloud/workerengine/schemas"
 )
 
-const FILES_PREFIX = "/files/"
+const (
+	FILES_PREFIX  = "/files/"
+	OUTPUT_PREFIX = "output/"
+)
 
 var Tasks map[string]*schemas.Task
 
@@ -25,7 +28,7 @@ func injectVariable(c []string, p string, v string) {
 
 func copyTaskFilesIntoContainer(t *schemas.Task, cid string) error {
 	reader := b64.NewDecoder(b64.StdEncoding, strings.NewReader(t.Files))
-	return podman.CopyTarIntoContainer(t.ID, reader, FILES_PREFIX)
+	return podman.CopyIntoContainer(t.ID, reader, FILES_PREFIX)
 }
 
 func ReadTasks() error {
@@ -83,6 +86,16 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 				}
 				break
 			}
+		}
+	}
+
+	for _, iovar := range tool.Outputs {
+		if iovar.Type == tsf.FILE {
+			injectVariable(
+				t.Command,
+				fmt.Sprint("{", iovar.Name, "}"),
+				fmt.Sprint(fmt.Sprint(FILES_PREFIX, OUTPUT_PREFIX), iovar.Name),
+			)
 		}
 	}
 

@@ -1,7 +1,12 @@
 package handlers
 
 import (
+	"archive/tar"
+	"bytes"
 	"context"
+	"encoding/base64"
+	"fmt"
+	"io"
 	"strconv"
 	"strings"
 
@@ -79,6 +84,53 @@ func GetTask(c *fiber.Ctx) error {
 	if !ok {
 		return NotFoundError(c)
 	}
+	return c.JSON(result)
+}
+
+// GetTaskOutputFiles godoc
+// @Summary      Get output files from task
+// @Description  Returns the contents of output files
+// @Tags         tasks
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "task id"
+// @Success      200 {object} map[string]string
+// @Failure      404 {object} schemas.ErrorResponse
+// @Failure      500 {object} schemas.ErrorResponse
+// @Router       /task/{id}/files [get]
+func GetTaskOutputFiles(c *fiber.Ctx) error {
+	task, ok := state.Tasks[c.Params("id")]
+	state.UpdateTask(task)
+	if !ok || task.Status != "exited" {
+		return NotFoundError(c)
+	}
+	archive := &bytes.Buffer{}
+
+	podman.CopyFromContainer(task.ID, archive, fmt.Sprint(state.FILES_PREFIX, state.OUTPUT_PREFIX))
+
+	data := tar.NewReader(archive)
+
+	result := make(map[string]string)
+
+	for {
+		hdr, err := data.Next()
+		if err == io.EOF {
+			break // End of archive
+		}
+		if err != nil {
+			return InternalServerError(c)
+		}
+
+		output := &strings.Builder{}
+		b64 := base64.NewEncoder(base64.StdEncoding, output)
+		if _, err := io.Copy(b64, data); err != nil {
+			return InternalServerError(c)
+		}
+		if output.Len() > 0 {
+			result[strings.TrimPrefix(hdr.Name, state.OUTPUT_PREFIX)] = output.String()
+		}
+	}
+
 	return c.JSON(result)
 }
 
