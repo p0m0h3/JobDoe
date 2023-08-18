@@ -1,9 +1,13 @@
 package state
 
 import (
+	"archive/tar"
+	"bytes"
 	b64 "encoding/base64"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 
 	"fuzz.codes/fuzzercloud/tsf"
@@ -26,33 +30,61 @@ func injectVariable(c []string, p string, v string) {
 	}
 }
 
-func copyTaskFilesIntoContainer(t *schemas.Task, cid string) error {
-	reader := b64.NewDecoder(b64.StdEncoding, strings.NewReader(t.Files))
-	return podman.CopyIntoContainer(t.ID, reader, FILES_PREFIX)
+func makeArchiveFromFiles(files map[string]string) io.Reader {
+	buffer := &bytes.Buffer{}
+	ar := tar.NewWriter(buffer)
+	defer ar.Close()
+
+	for name, content := range files {
+		// decode the base64 content and write it onto a buffer to get the size
+		decoder := b64.NewDecoder(b64.StdEncoding, strings.NewReader(content))
+		data := &bytes.Buffer{}
+		io.Copy(data, decoder)
+
+		// write file header to archive buffer
+		header := &tar.Header{
+			Name:  name,
+			Mode:  int64(os.FileMode(0660)),
+			Uname: "root",
+			Gname: "root",
+			Size:  int64(data.Len()),
+		}
+		ar.WriteHeader(header)
+		io.Copy(ar, data)
+	}
+
+	return buffer
 }
 
-func findProfile(t *tsf.Tool, profName string) tsf.Profile {
+func copyTaskFilesIntoContainer(t *schemas.Task) error {
+	ar := makeArchiveFromFiles(t.Files)
+	return podman.CopyIntoContainer(t.ID, ar, FILES_PREFIX)
+}
+
+func findProfile(t *tsf.Tool, profName string) (tsf.Profile, bool) {
 	for _, prof := range t.Execute.Profiles {
 		if prof.Name == profName {
-			return prof
+			return prof, true
 		}
 	}
 
-	return tsf.Profile{}
+	return tsf.Profile{}, false
 }
 
-func findModifiers(t *tsf.Tool, modNames []string) []string {
+func findModifiers(t *tsf.Tool, modNames []string) ([]string, bool) {
 	result := make([]string, 0)
+	found := false
 
 	for _, modName := range modNames {
 		for _, mod := range t.Execute.Modifiers {
 			if modName == mod.Name {
 				result = append(result, mod.Format)
+				found = true
 			}
 		}
 	}
 
-	return result
+	return result, found
 }
 
 func formatVariable(input tsf.Input, value string) string {
@@ -95,24 +127,27 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 			ID:   req.ToolID,
 			Spec: tool,
 		},
-		Files: req.Files,
+		Files: make(map[string]string),
 	}
-
-	profile := findProfile(tool, req.Profile)
-
-	modifiers := findModifiers(tool, req.Modifiers)
 
 	t.Command = append(t.Command, tool.Execute.Command)
 
-	profileTokens := strings.Split(profile.Format, " ")
-	t.Command = append(t.Command, profileTokens...)
-	t.Command = append(t.Command, modifiers...)
+	if profile, found := findProfile(tool, req.Profile); found {
+		profileTokens := strings.Split(profile.Format, " ")
+		t.Command = append(t.Command, profileTokens...)
+	}
+
+	if modifiers, found := findModifiers(tool, req.Modifiers); found {
+		t.Command = append(t.Command, modifiers...)
+	}
 
 	for _, iovar := range tool.Execute.Inputs {
 		for k, v := range req.Inputs {
 			if iovar.Name == k {
 				if iovar.Type == tsf.FILE {
-					injectVariable(t.Command, fmt.Sprint("{", k, "}"), fmt.Sprint(FILES_PREFIX, v))
+					injectVariable(t.Command, fmt.Sprint("{", k, "}"), fmt.Sprint(FILES_PREFIX, k))
+					t.Files[k] = v
+
 				} else {
 					injectVariable(t.Command, fmt.Sprint("{", k, "}"), formatVariable(iovar, v))
 				}
@@ -141,7 +176,7 @@ func StartTask(t *schemas.Task) (string, error) {
 	t.ID = c.ID
 	Tasks[t.ID] = t
 
-	err = copyTaskFilesIntoContainer(t, c.ID)
+	err = copyTaskFilesIntoContainer(t)
 	if err != nil {
 		return c.ID, err
 	}

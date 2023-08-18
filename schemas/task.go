@@ -8,7 +8,6 @@ type CreateTaskRequest struct {
 	Profile   string            `json:"profile" validate:"ascii"`
 	Inputs    map[string]string `json:"inputs"`
 	Env       map[string]string `json:"env"`
-	Files     string            `json:"files"`
 }
 
 type Task struct {
@@ -16,8 +15,8 @@ type Task struct {
 	Command []string          `json:"cmd"`
 	Env     map[string]string `json:"env"`
 	Status  string            `json:"status"`
+	Files   map[string]string `json:"-"`
 	Tool    Tool              `json:"-"`
-	Files   string            `json:"-"`
 }
 
 type GetTaskStatsResponse struct {
