@@ -438,7 +438,6 @@
         "schemas.CreateTaskRequest": {
             "type": "object",
             "required": [
-                "modifier",
                 "tool"
             ],
             "properties": {
@@ -457,7 +456,13 @@
                         "type": "string"
                     }
                 },
-                "modifier": {
+                "modifiers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "profile": {
                     "type": "string"
                 },
                 "tool": {
@@ -524,20 +529,41 @@
                 }
             }
         },
-        "tsf.Executable": {
+        "tsf.Execute": {
             "type": "object",
             "properties": {
                 "command": {
                     "type": "string"
                 },
-                "modifiers": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
+                "environment": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.EnvVar"
                     }
                 },
-                "stdin": {
-                    "type": "boolean"
+                "inputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.Input"
+                    }
+                },
+                "modifiers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.Modifier"
+                    }
+                },
+                "outputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.Output"
+                    }
+                },
+                "profiles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.Profile"
+                    }
                 }
             }
         },
@@ -547,18 +573,26 @@
                 0,
                 1,
                 2,
-                3
+                3,
+                4
             ],
             "x-enum-varnames": [
                 "FILE",
                 "STRING",
-                "STDOUT",
-                "STDIN"
+                "EMAIL",
+                "URL",
+                "DOMAIN"
             ]
         },
-        "tsf.IOVariable": {
+        "tsf.Input": {
             "type": "object",
             "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "format": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -567,35 +601,61 @@
                 }
             }
         },
-        "tsf.Tool": {
+        "tsf.Modifier": {
             "type": "object",
             "properties": {
-                "env": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tsf.EnvVar"
-                    }
+                "format": {
+                    "type": "string"
                 },
-                "exe": {
-                    "$ref": "#/definitions/tsf.Executable"
-                },
-                "inputs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tsf.IOVariable"
-                    }
+                "human": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "tsf.Output": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "tsf.Profile": {
+            "type": "object",
+            "properties": {
+                "format": {
+                    "type": "string"
                 },
-                "outputs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tsf.IOVariable"
-                    }
+                "human": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "tsf.Sandbox": {
+            "type": "object",
+            "properties": {
+                "environment": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "tsf.Tool": {
+            "type": "object",
+            "properties": {
+                "execute": {
+                    "$ref": "#/definitions/tsf.Execute"
                 },
                 "sandbox": {
-                    "type": "string"
+                    "$ref": "#/definitions/tsf.Sandbox"
                 }
             }
         }

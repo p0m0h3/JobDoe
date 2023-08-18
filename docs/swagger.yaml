@@ -11,12 +11,15 @@ definitions:
         additionalProperties:
           type: string
         type: object
-      modifier:
+      modifiers:
+        items:
+          type: string
+        type: array
+      profile:
         type: string
       tool:
         type: string
     required:
-    - modifier
     - tool
     type: object
   schemas.ErrorResponse:
@@ -57,16 +60,30 @@ definitions:
       name:
         type: string
     type: object
-  tsf.Executable:
+  tsf.Execute:
     properties:
       command:
         type: string
+      environment:
+        items:
+          $ref: '#/definitions/tsf.EnvVar'
+        type: array
+      inputs:
+        items:
+          $ref: '#/definitions/tsf.Input'
+        type: array
       modifiers:
-        additionalProperties:
-          type: string
-        type: object
-      stdin:
-        type: boolean
+        items:
+          $ref: '#/definitions/tsf.Modifier'
+        type: array
+      outputs:
+        items:
+          $ref: '#/definitions/tsf.Output'
+        type: array
+      profiles:
+        items:
+          $ref: '#/definitions/tsf.Profile'
+        type: array
     type: object
   tsf.IOType:
     enum:
@@ -74,39 +91,61 @@ definitions:
     - 1
     - 2
     - 3
+    - 4
     type: integer
     x-enum-varnames:
     - FILE
     - STRING
-    - STDOUT
-    - STDIN
-  tsf.IOVariable:
+    - EMAIL
+    - URL
+    - DOMAIN
+  tsf.Input:
     properties:
+      class:
+        type: string
+      format:
+        type: string
       name:
         type: string
       type:
         $ref: '#/definitions/tsf.IOType'
     type: object
-  tsf.Tool:
+  tsf.Modifier:
     properties:
-      env:
-        items:
-          $ref: '#/definitions/tsf.EnvVar'
-        type: array
-      exe:
-        $ref: '#/definitions/tsf.Executable'
-      inputs:
-        items:
-          $ref: '#/definitions/tsf.IOVariable'
-        type: array
+      format:
+        type: string
+      human:
+        type: string
       name:
         type: string
-      outputs:
-        items:
-          $ref: '#/definitions/tsf.IOVariable'
-        type: array
-      sandbox:
+    type: object
+  tsf.Output:
+    properties:
+      name:
         type: string
+    type: object
+  tsf.Profile:
+    properties:
+      format:
+        type: string
+      human:
+        type: string
+      name:
+        type: string
+    type: object
+  tsf.Sandbox:
+    properties:
+      environment:
+        type: string
+      name:
+        type: string
+    type: object
+  tsf.Tool:
+    properties:
+      execute:
+        $ref: '#/definitions/tsf.Execute'
+      sandbox:
+        $ref: '#/definitions/tsf.Sandbox'
     type: object
 host: 127.0.0.1:7001
 info:

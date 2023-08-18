@@ -3,11 +3,12 @@ package schemas
 import "time"
 
 type CreateTaskRequest struct {
-	ToolID   string            `json:"tool" validate:"required,ascii"`
-	Modifier string            `json:"modifier" validate:"required,ascii"`
-	Inputs   map[string]string `json:"inputs"`
-	Env      map[string]string `json:"env"`
-	Files    string            `json:"files"`
+	ToolID    string            `json:"tool" validate:"required,ascii"`
+	Modifiers []string          `json:"modifiers" validate:"ascii"`
+	Profile   string            `json:"profile" validate:"ascii"`
+	Inputs    map[string]string `json:"inputs"`
+	Env       map[string]string `json:"env"`
+	Files     string            `json:"files"`
 }
 
 type Task struct {

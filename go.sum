@@ -29,6 +29,10 @@ fuzz.codes/fuzzercloud/tsf v0.0.0-20230711072520-2c033709e8f7 h1:PoWEQhYqn0TiTMy
 fuzz.codes/fuzzercloud/tsf v0.0.0-20230711072520-2c033709e8f7/go.mod h1:03NxEVItRJP1rBYf7URxLrgP6JDVbH9WdCJBSRIWEcE=
 fuzz.codes/fuzzercloud/tsf v0.0.0-20230808223915-1e18d66cabd9 h1:1dZQUwau8aQjabqdHXeMX+8vvVk8Gs4QYFFJMuul8jk=
 fuzz.codes/fuzzercloud/tsf v0.0.0-20230808223915-1e18d66cabd9/go.mod h1:03NxEVItRJP1rBYf7URxLrgP6JDVbH9WdCJBSRIWEcE=
+fuzz.codes/fuzzercloud/tsf v0.0.0-20230818162048-e9b3a6ce663b h1:gNjBM9e700aBYcZFK0z8yHs/r3AE5xvwZgMv4l+g8cc=
+fuzz.codes/fuzzercloud/tsf v0.0.0-20230818162048-e9b3a6ce663b/go.mod h1:03NxEVItRJP1rBYf7URxLrgP6JDVbH9WdCJBSRIWEcE=
+fuzz.codes/fuzzercloud/tsf v0.4.0 h1:0fCyQ60etZOsrshoZncsKgG91Q+Fm1NIPdYFWHCbTmo=
+fuzz.codes/fuzzercloud/tsf v0.4.0/go.mod h1:03NxEVItRJP1rBYf7URxLrgP6JDVbH9WdCJBSRIWEcE=
 github.com/14rcole/gopopulate v0.0.0-20180821133914-b175b219e774 h1:SCbEWT58NSt7d2mcFdvxC9uyrdcTfvBbPLThhkDmXzg=
 github.com/Azure/azure-sdk-for-go v16.2.1+incompatible/go.mod h1:9XXNKU+eRnpl9moKnB4QOLf1HestfXbmab5FXxiDBjc=
 github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78/go.mod h1:LmzpDX56iTiv29bbRTIsUNlaFfuhWRQBWjQdVyAevI8=

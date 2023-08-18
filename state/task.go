@@ -31,6 +31,37 @@ func copyTaskFilesIntoContainer(t *schemas.Task, cid string) error {
 	return podman.CopyIntoContainer(t.ID, reader, FILES_PREFIX)
 }
 
+func findProfile(t *tsf.Tool, profName string) tsf.Profile {
+	for _, prof := range t.Execute.Profiles {
+		if prof.Name == profName {
+			return prof
+		}
+	}
+
+	return tsf.Profile{}
+}
+
+func findModifiers(t *tsf.Tool, modNames []string) []string {
+	result := make([]string, 0)
+
+	for _, modName := range modNames {
+		for _, mod := range t.Execute.Modifiers {
+			if modName == mod.Name {
+				result = append(result, mod.Format)
+			}
+		}
+	}
+
+	return result
+}
+
+func formatVariable(input tsf.Input, value string) string {
+	if input.Format != "" {
+		return strings.ReplaceAll(input.Format, "%s", value)
+	}
+	return value
+}
+
 func ReadTasks() error {
 	containers, err := podman.GetAllContainers()
 	if err != nil {
@@ -67,43 +98,42 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		Files: req.Files,
 	}
 
-	modifier, ok := tool.Exe.Modifiers[req.Modifier]
-	if !ok {
-		return t, errors.New("could not find modifier")
-	}
-	t.Command = append(t.Command, tool.Exe.Command)
+	profile := findProfile(tool, req.Profile)
 
-	modifierTokens := strings.Split(modifier, " ")
-	t.Command = append(t.Command, modifierTokens...)
+	modifiers := findModifiers(tool, req.Modifiers)
 
-	for _, iovar := range tool.Inputs {
+	t.Command = append(t.Command, tool.Execute.Command)
+
+	profileTokens := strings.Split(profile.Format, " ")
+	t.Command = append(t.Command, profileTokens...)
+	t.Command = append(t.Command, modifiers...)
+
+	for _, iovar := range tool.Execute.Inputs {
 		for k, v := range req.Inputs {
 			if iovar.Name == k {
-				if iovar.Type == tsf.STRING {
-					injectVariable(t.Command, fmt.Sprint("{", k, "}"), v)
-				} else if iovar.Type == tsf.FILE {
+				if iovar.Type == tsf.FILE {
 					injectVariable(t.Command, fmt.Sprint("{", k, "}"), fmt.Sprint(FILES_PREFIX, v))
+				} else {
+					injectVariable(t.Command, fmt.Sprint("{", k, "}"), formatVariable(iovar, v))
 				}
 				break
 			}
 		}
 	}
 
-	for _, iovar := range tool.Outputs {
-		if iovar.Type == tsf.FILE {
-			injectVariable(
-				t.Command,
-				fmt.Sprint("{", iovar.Name, "}"),
-				fmt.Sprint(fmt.Sprint(FILES_PREFIX, OUTPUT_PREFIX), iovar.Name),
-			)
-		}
+	for _, outputFile := range tool.Execute.Outputs {
+		injectVariable(
+			t.Command,
+			fmt.Sprint("{", outputFile.Name, "}"),
+			fmt.Sprint(fmt.Sprint(FILES_PREFIX, OUTPUT_PREFIX), outputFile.Name),
+		)
 	}
 
 	return t, nil
 }
 
 func StartTask(t *schemas.Task) (string, error) {
-	c, err := podman.CreateContainer(t.Tool.Spec.Name, t.Command, t.Env)
+	c, err := podman.CreateContainer(t.Tool.Spec.Sandbox.Name, t.Command, t.Env)
 	if err != nil {
 		return "", err
 	}
