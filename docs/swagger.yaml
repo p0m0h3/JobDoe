@@ -5,8 +5,6 @@ definitions:
         additionalProperties:
           type: string
         type: object
-      files:
-        type: string
       inputs:
         additionalProperties:
           type: string

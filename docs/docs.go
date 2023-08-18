@@ -455,9 +455,6 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
-                "files": {
-                    "type": "string"
-                },
                 "inputs": {
                     "type": "object",
                     "additionalProperties": {
