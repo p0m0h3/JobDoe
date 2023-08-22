@@ -11,6 +11,7 @@ import (
 // GetAllTools godoc
 // @Summary      Get all available tools
 // @Description  Get the name of all available tools
+// @Security     ApiKeyAuth
 // @Tags         tools
 // @Accept       json
 // @Produce      json
@@ -28,6 +29,7 @@ func GetAllTools(c *fiber.Ctx) error {
 // GetTool godoc
 // @Summary      Get available tool by name
 // @Description  Get details for a tool
+// @Security     ApiKeyAuth
 // @Tags         tools
 // @Param        name  path  string  true  "Tool name"
 // @Accept       json

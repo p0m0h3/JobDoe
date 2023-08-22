@@ -162,6 +162,8 @@ paths:
       responses:
         "204":
           description: No Content
+      security:
+      - ApiKeyAuth: []
       summary: Prune all stopped/exited tasks
       tags:
       - tasks
@@ -176,6 +178,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/schemas.Task'
+      security:
+      - ApiKeyAuth: []
       summary: Get a list of all tasks
       tags:
       - tasks
@@ -206,6 +210,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Create a new task
       tags:
       - tasks
@@ -229,6 +235,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Delete a task
       tags:
       - tasks
@@ -257,6 +265,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Get the details of a task
       tags:
       - tasks
@@ -288,6 +298,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Get output files from task
       tags:
       - tasks
@@ -321,6 +333,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Get the stdout/stderr of a exited task
       tags:
       - tasks
@@ -350,6 +364,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Task statistics
       tags:
       - tasks
@@ -379,6 +395,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Wait on task
       tags:
       - tasks
@@ -400,6 +418,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Get all available tools
       tags:
       - tools
@@ -429,6 +449,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Get available tool by name
       tags:
       - tools

@@ -25,6 +25,7 @@ var Mode string
 // @securitydefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
+// @schemes https http
 // @BasePath /
 func main() {
 	var err error

@@ -20,6 +20,7 @@ import (
 // CreateTask godoc
 // @Summary      Create a new task
 // @Description  Start a new sandbox with a tool running inside
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      json
@@ -58,6 +59,7 @@ func CreateTask(c *fiber.Ctx) error {
 // GetAllTasks godoc
 // @Summary      Get a list of all tasks
 // @Description  Returns all identified tasks
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      json
@@ -70,6 +72,7 @@ func GetAllTasks(c *fiber.Ctx) error {
 // GetTask godoc
 // @Summary      Get the details of a task
 // @Description  Returns the details of a task
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      json
@@ -90,6 +93,7 @@ func GetTask(c *fiber.Ctx) error {
 // GetTaskOutputFiles godoc
 // @Summary      Get output files from task
 // @Description  Returns the contents of output files
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      json
@@ -137,6 +141,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 // DeleteTask godoc
 // @Summary      Delete a task
 // @Description  Delete a task's data and container
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      plain
@@ -162,6 +167,7 @@ func DeleteTask(c *fiber.Ctx) error {
 // PruneTasks godoc
 // @Summary      Prune all stopped/exited tasks
 // @Description  Prune the data and container of all stopped/exited tasks
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      plain
@@ -176,6 +182,7 @@ func PruneTasks(c *fiber.Ctx) error {
 // GetTaskLog godoc
 // @Summary      Get the stdout/stderr of a exited task
 // @Description  Get the stdout/stderr of an exited task in plaintext
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      plain
@@ -254,6 +261,7 @@ func StreamTaskLog(c *websocket.Conn) {
 // GetTaskStats godoc
 // @Summary      Task statistics
 // @Description  Get the resource usage of a task
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      json
@@ -293,6 +301,7 @@ func GetTaskStats(c *fiber.Ctx) error {
 // WaitOnTask godoc
 // @Summary      Wait on task
 // @Description  Return when a task state is changed to exited
+// @Security     ApiKeyAuth
 // @Tags         tasks
 // @Accept       json
 // @Produce      plain

@@ -18,6 +18,11 @@ const docTemplate = `{
     "paths": {
         "/v1/task": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Returns all identified tasks",
                 "consumes": [
                     "application/json"
@@ -39,6 +44,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Prune the data and container of all stopped/exited tasks",
                 "consumes": [
                     "application/json"
@@ -59,6 +69,11 @@ const docTemplate = `{
         },
         "/v1/task/": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Start a new sandbox with a tool running inside",
                 "consumes": [
                     "application/json"
@@ -105,6 +120,11 @@ const docTemplate = `{
         },
         "/v1/task/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Returns the details of a task",
                 "consumes": [
                     "application/json"
@@ -147,6 +167,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Delete a task's data and container",
                 "consumes": [
                     "application/json"
@@ -182,6 +207,11 @@ const docTemplate = `{
         },
         "/v1/task/{id}/files": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Returns the contents of output files",
                 "consumes": [
                     "application/json"
@@ -229,6 +259,11 @@ const docTemplate = `{
         },
         "/v1/task/{id}/log": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get the stdout/stderr of an exited task in plaintext",
                 "consumes": [
                     "application/json"
@@ -279,6 +314,11 @@ const docTemplate = `{
         },
         "/v1/task/{id}/stats": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get the resource usage of a task",
                 "consumes": [
                     "application/json"
@@ -323,6 +363,11 @@ const docTemplate = `{
         },
         "/v1/task/{id}/wait": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Return when a task state is changed to exited",
                 "consumes": [
                     "application/json"
@@ -367,6 +412,11 @@ const docTemplate = `{
         },
         "/v1/tool/": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get the name of all available tools",
                 "consumes": [
                     "application/json"
@@ -399,6 +449,11 @@ const docTemplate = `{
         },
         "/v1/tool/{name}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get details for a tool",
                 "consumes": [
                     "application/json"
