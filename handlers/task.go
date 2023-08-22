@@ -27,7 +27,7 @@ import (
 // @Success      201 {object} schemas.Task
 // @Failure      400 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /task/ [post]
+// @Router       /v1/task/ [post]
 func CreateTask(c *fiber.Ctx) error {
 	req := schemas.CreateTaskRequest{}
 
@@ -62,7 +62,7 @@ func CreateTask(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Success      200 {object} schemas.Task
-// @Router       /task [get]
+// @Router       /v1/task [get]
 func GetAllTasks(c *fiber.Ctx) error {
 	return c.JSON(state.Tasks)
 }
@@ -77,7 +77,7 @@ func GetAllTasks(c *fiber.Ctx) error {
 // @Success      200 {object} schemas.Task
 // @Failure      404 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /task/{id} [get]
+// @Router       /v1/task/{id} [get]
 func GetTask(c *fiber.Ctx) error {
 	result, ok := state.Tasks[c.Params("id")]
 	state.UpdateTask(result)
@@ -97,7 +97,7 @@ func GetTask(c *fiber.Ctx) error {
 // @Success      200 {object} map[string]string
 // @Failure      404 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /task/{id}/files [get]
+// @Router       /v1/task/{id}/files [get]
 func GetTaskOutputFiles(c *fiber.Ctx) error {
 	task, ok := state.Tasks[c.Params("id")]
 	state.UpdateTask(task)
@@ -143,7 +143,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 // @Param        id path string true "task id"
 // @Success      204
 // @Failure      404 {object} schemas.ErrorResponse
-// @Router       /task/{id} [delete]
+// @Router       /v1/task/{id} [delete]
 func DeleteTask(c *fiber.Ctx) error {
 	result, ok := state.Tasks[c.Params("id")]
 	if !ok {
@@ -166,7 +166,7 @@ func DeleteTask(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      plain
 // @Success      204
-// @Router       /task [delete]
+// @Router       /v1/task [delete]
 func PruneTasks(c *fiber.Ctx) error {
 	podman.PruneTasks()
 	state.ResetTasks()
@@ -184,7 +184,7 @@ func PruneTasks(c *fiber.Ctx) error {
 // @Success      200 {object} string
 // @Failure      404 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /task/{id}/log [get]
+// @Router       /v1/task/{id}/log [get]
 func GetTaskLog(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
@@ -261,7 +261,7 @@ func StreamTaskLog(c *websocket.Conn) {
 // @Success      200 {object} string
 // @Failure      404 {object} schemas.ErrorResponse
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /task/{id}/stats [get]
+// @Router       /v1/task/{id}/stats [get]
 func GetTaskStats(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
@@ -300,7 +300,7 @@ func GetTaskStats(c *fiber.Ctx) error {
 // @Success      200 {object} string
 // @Failure      500 {object} schemas.ErrorResponse
 // @Failure      404 {object} schemas.ErrorResponse
-// @Router       /task/{id}/wait [get]
+// @Router       /v1/task/{id}/wait [get]
 func WaitOnTask(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {

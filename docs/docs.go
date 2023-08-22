@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/task": {
+        "/v1/task": {
             "get": {
                 "description": "Returns all identified tasks",
                 "consumes": [
@@ -57,7 +57,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/": {
+        "/v1/task/": {
             "post": {
                 "description": "Start a new sandbox with a tool running inside",
                 "consumes": [
@@ -103,7 +103,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}": {
+        "/v1/task/{id}": {
             "get": {
                 "description": "Returns the details of a task",
                 "consumes": [
@@ -180,7 +180,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/files": {
+        "/v1/task/{id}/files": {
             "get": {
                 "description": "Returns the contents of output files",
                 "consumes": [
@@ -227,7 +227,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/log": {
+        "/v1/task/{id}/log": {
             "get": {
                 "description": "Get the stdout/stderr of an exited task in plaintext",
                 "consumes": [
@@ -277,7 +277,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/stats": {
+        "/v1/task/{id}/stats": {
             "get": {
                 "description": "Get the resource usage of a task",
                 "consumes": [
@@ -321,7 +321,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/{id}/wait": {
+        "/v1/task/{id}/wait": {
             "get": {
                 "description": "Return when a task state is changed to exited",
                 "consumes": [
@@ -365,7 +365,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/tool/": {
+        "/v1/tool/": {
             "get": {
                 "description": "Get the name of all available tools",
                 "consumes": [
@@ -397,7 +397,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/tool/{name}": {
+        "/v1/tool/{name}": {
             "get": {
                 "description": "Get details for a tool",
                 "consumes": [

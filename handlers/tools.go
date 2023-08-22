@@ -16,7 +16,7 @@ import (
 // @Produce      json
 // @Success      200 {array} string
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /tool/ [get]
+// @Router       /v1/tool/ [get]
 func GetAllTools(c *fiber.Ctx) error {
 	result := make([]string, 0)
 	for name := range state.Tools {
@@ -35,7 +35,7 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Success      200 {object} schemas.Tool
 // @Failure      500 {object} schemas.ErrorResponse
 // @Failure      404 {object} schemas.ErrorResponse
-// @Router       /tool/{name} [get]
+// @Router       /v1/tool/{name} [get]
 func GetTool(c *fiber.Ctx) error {
 	tool, ok := state.Tools[c.Params("name")]
 	if !ok {

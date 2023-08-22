@@ -152,7 +152,7 @@ info:
   title: WorkerEngine API
   version: "1.0"
 paths:
-  /task:
+  /v1/task:
     delete:
       consumes:
       - application/json
@@ -179,7 +179,7 @@ paths:
       summary: Get a list of all tasks
       tags:
       - tasks
-  /task/:
+  /v1/task/:
     post:
       consumes:
       - application/json
@@ -209,7 +209,7 @@ paths:
       summary: Create a new task
       tags:
       - tasks
-  /task/{id}:
+  /v1/task/{id}:
     delete:
       consumes:
       - application/json
@@ -260,7 +260,7 @@ paths:
       summary: Get the details of a task
       tags:
       - tasks
-  /task/{id}/files:
+  /v1/task/{id}/files:
     get:
       consumes:
       - application/json
@@ -291,7 +291,7 @@ paths:
       summary: Get output files from task
       tags:
       - tasks
-  /task/{id}/log:
+  /v1/task/{id}/log:
     get:
       consumes:
       - application/json
@@ -324,7 +324,7 @@ paths:
       summary: Get the stdout/stderr of a exited task
       tags:
       - tasks
-  /task/{id}/stats:
+  /v1/task/{id}/stats:
     get:
       consumes:
       - application/json
@@ -353,7 +353,7 @@ paths:
       summary: Task statistics
       tags:
       - tasks
-  /task/{id}/wait:
+  /v1/task/{id}/wait:
     get:
       consumes:
       - application/json
@@ -382,7 +382,7 @@ paths:
       summary: Wait on task
       tags:
       - tasks
-  /tool/:
+  /v1/tool/:
     get:
       consumes:
       - application/json
@@ -403,7 +403,7 @@ paths:
       summary: Get all available tools
       tags:
       - tools
-  /tool/{name}:
+  /v1/tool/{name}:
     get:
       consumes:
       - application/json

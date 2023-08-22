@@ -6,8 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func RegisterRoutes(app *fiber.App) {
-	task := app.Group("/task")
+func RegisterV1Routes(v1 fiber.Router) {
+	task := v1.Group("/task")
 	task.Post("/", handlers.CreateTask)
 	task.Get("/", handlers.GetAllTasks)
 	task.Get("/:id", handlers.GetTask)
@@ -19,7 +19,12 @@ func RegisterRoutes(app *fiber.App) {
 	task.Get("/:id/stats", handlers.GetTaskStats)
 	task.Get("/:id/wait", handlers.WaitOnTask)
 
-	tool := app.Group("/tool")
+	tool := v1.Group("/tool")
 	tool.Get("/", handlers.GetAllTools)
 	tool.Get("/:name", handlers.GetTool)
+}
+
+func RegisterRoutes(app *fiber.App) {
+	v1 := app.Group("/v1")
+	RegisterV1Routes(v1)
 }
