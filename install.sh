@@ -7,7 +7,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 mkdir -p /opt/workerengine
-cp ./workerengine env.example /opt/workerengine
+cp ./workerengine ./env.example /opt/workerengine
 cp ./workerengine.service /etc/systemd/system
 systemctl daemon-reload
 chmod -R 700 /opt/workerengine
