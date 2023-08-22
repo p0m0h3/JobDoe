@@ -21,6 +21,13 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 	})
 }
 
+func UnauthorizedError(c *fiber.Ctx, err error) error {
+	return c.Status(fiber.StatusUnauthorized).JSON(schemas.ErrorResponse{
+		Code:    fiber.ErrUnauthorized.Code,
+		Message: err.Error(),
+	})
+}
+
 func InternalServerError(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusInternalServerError).JSON(schemas.ErrorResponse{
 		Code:    fiber.ErrInternalServerError.Code,
@@ -32,13 +39,6 @@ func NotFoundError(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotFound).JSON(schemas.ErrorResponse{
 		Code:    fiber.ErrNotFound.Code,
 		Message: fiber.ErrNotFound.Message,
-	})
-}
-
-func UnauthorizedError(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusUnauthorized).JSON(schemas.ErrorResponse{
-		Code:    fiber.ErrUnauthorized.Code,
-		Message: fiber.ErrUnauthorized.Message,
 	})
 }
 

@@ -47,7 +47,8 @@ func main() {
 	} else {
 		accessKeyHash = sha256.Sum256([]byte(os.Getenv("ACCESS_KEY")))
 		app.Use(keyauth.New(keyauth.Config{
-			Validator: keyValidator,
+			Validator:    keyValidator,
+			ErrorHandler: handlers.UnauthorizedError,
 		}))
 	}
 
