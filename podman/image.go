@@ -3,7 +3,7 @@ package podman
 import "github.com/containers/podman/v4/pkg/bindings/images"
 
 var (
-	PULLPOLICY = "missing"
+	PULLPOLICY = "newer"
 	PULLQUIET  = true
 )
 
