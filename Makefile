@@ -1,4 +1,4 @@
-PACKAGE_FILES=workerengine workerengine.service install.sh env.example
+PACKAGE_FILES=workerengine workerengine.service install.sh env.example regauth.json.example
 
 swag:
 	swag init --quiet --parseDependency

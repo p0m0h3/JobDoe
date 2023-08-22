@@ -24,6 +24,7 @@ go.work
 
 # Environment file
 env
+regauth.json
 
 # Editor/IDE files
 .vscode
