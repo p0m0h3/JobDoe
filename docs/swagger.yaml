@@ -25,8 +25,7 @@ definitions:
       code:
         type: integer
       details:
-        items:
-          type: string
+        items: {}
         type: array
       message:
         type: string
@@ -408,6 +407,34 @@ paths:
       summary: Wait on task
       tags:
       - tasks
+  /v1/tool:
+    post:
+      consumes:
+      - text/plain
+      description: Upload a custom tsf file to use
+      parameters:
+      - description: new tool spec
+        in: body
+        name: spec
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tsf.Spec'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new spec
+      tags:
+      - tools
   /v1/tool/:
     get:
       consumes:

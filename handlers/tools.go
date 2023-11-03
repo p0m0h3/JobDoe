@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"git.fuzz.codes/fuzzercloud/tsf"
 	"git.fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/fiber/v2"
 )
@@ -40,6 +41,27 @@ func GetTool(c *fiber.Ctx) error {
 	if !ok {
 		return NotFoundError(c)
 	}
+
+	return c.JSON(tool)
+}
+
+// CreateTool godoc
+// @Summary      Create a new spec
+// @Description  Upload a custom tsf file to use
+// @Security     ApiKeyAuth
+// @Tags         tools
+// @Accept       plain
+// @Produce      json
+// @Param        spec body string true "new tool spec"
+// @Success      200 {object} tsf.Spec
+// @Failure      500 {object} schemas.ErrorResponse
+// @Router       /v1/tool [post]
+func CreateTool(c *fiber.Ctx) error {
+	tool, err := tsf.Parse(c.Body())
+	if err != nil {
+		return BadRequestError(c, []error{err})
+	}
+	state.Tools[tool.Header.ID] = &tool
 
 	return c.JSON(tool)
 }

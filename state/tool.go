@@ -29,7 +29,7 @@ func ReadTools() error {
 				log.Println(fmt.Errorf("%v (Error parsing TSF file %s)", err, toolFile.Name()))
 			}
 			if err == nil {
-				Tools[strings.TrimSuffix(toolFile.Name(), ".toml")] = &tool
+				Tools[tool.Header.ID] = &tool
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"git.fuzz.codes/fuzzercloud/workerengine/handlers"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
@@ -22,6 +24,10 @@ func RegisterV1Routes(v1 fiber.Router) {
 	tool := v1.Group("/tool")
 	tool.Get("/", handlers.GetAllTools)
 	tool.Get("/:name", handlers.GetTool)
+	if os.Getenv("CUSTOM_SPEC") == "true" {
+		tool.Post("/", handlers.CreateTool)
+	}
+
 }
 
 func RegisterRoutes(app *fiber.App) {
