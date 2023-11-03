@@ -42,18 +42,17 @@ func ForbiddenError(c *fiber.Ctx) error {
 	})
 }
 
+func NotFoundError(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusNotFound).JSON(schemas.ErrorResponse{
+		Code:    fiber.ErrNotFound.Code,
+		Message: fiber.ErrNotFound.Message,
+	})
+}
+
 func BadRequestError(c *fiber.Ctx, errors []error) error {
 	return c.Status(fiber.StatusBadRequest).JSON(schemas.ErrorResponse{
 		Code:    fiber.ErrBadRequest.Code,
 		Message: fiber.ErrBadRequest.Message,
-		Errors:  errors,
-	})
-}
-
-func NotFoundError(c *fiber.Ctx, errors []error) error {
-	return c.Status(fiber.StatusNotFound).JSON(schemas.ErrorResponse{
-		Code:    fiber.ErrNotFound.Code,
-		Message: fiber.ErrNotFound.Message,
 		Errors:  errors,
 	})
 }

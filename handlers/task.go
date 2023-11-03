@@ -84,10 +84,10 @@ func GetAllTasks(c *fiber.Ctx) error {
 // @Router       /v1/task/{id} [get]
 func GetTask(c *fiber.Ctx) error {
 	result, ok := state.Tasks[c.Params("id")]
-	state.UpdateTask(result)
 	if !ok {
-		return NotFoundError(c, []error{errors.New("id")})
+		return NotFoundError(c)
 	}
+	state.UpdateTask(result)
 	return c.JSON(result)
 }
 
@@ -107,7 +107,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 	task, ok := state.Tasks[c.Params("id")]
 	state.UpdateTask(task)
 	if !ok || task.Status != "exited" {
-		return NotFoundError(c, []error{errors.New("id")})
+		return NotFoundError(c)
 	}
 	archive := &bytes.Buffer{}
 
@@ -153,7 +153,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 func DeleteTask(c *fiber.Ctx) error {
 	result, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c, []error{errors.New("id")})
+		return NotFoundError(c)
 	}
 
 	if err := podman.DeleteContainer(result.ID); err != nil {
@@ -196,7 +196,7 @@ func PruneTasks(c *fiber.Ctx) error {
 func GetTaskLog(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c, []error{errors.New("id")})
+		return NotFoundError(c)
 	}
 
 	stderr, err := strconv.ParseBool(c.Query("stderr", "false"))
@@ -214,7 +214,7 @@ func GetTaskLog(c *fiber.Ctx) error {
 	}()
 
 	if err != nil {
-		return NotFoundError(c, []error{err})
+		return NotFoundError(c)
 	}
 
 	var logs strings.Builder
@@ -274,7 +274,7 @@ func StreamTaskLog(c *websocket.Conn) {
 func GetTaskStats(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c, []error{errors.New("id")})
+		return NotFoundError(c)
 	}
 	data, err := podman.GetContainerStats(t.ID)
 	if err != nil || len(data.Stats) < 1 {
@@ -314,7 +314,7 @@ func GetTaskStats(c *fiber.Ctx) error {
 func WaitOnTask(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c, []error{errors.New("id")})
+		return NotFoundError(c)
 	}
 
 	err := podman.WaitOnContainer(t.ID)
