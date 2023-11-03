@@ -159,6 +159,29 @@ info:
   title: WorkerEngine API
   version: "1.0"
 paths:
+  /v1:
+    get:
+      consumes:
+      - application/json
+      description: Information includes version, configuration and state
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get info about the worker server
+      tags:
+      - state
   /v1/task:
     delete:
       consumes:

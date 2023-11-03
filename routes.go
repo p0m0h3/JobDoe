@@ -9,6 +9,8 @@ import (
 )
 
 func RegisterV1Routes(v1 fiber.Router) {
+	v1.Get("/", handlers.Ping)
+
 	task := v1.Group("/task")
 	task.Post("/", handlers.CreateTask)
 	task.Get("/", handlers.GetAllTasks)
