@@ -1,15 +1,21 @@
+VERSION=v0.1.0
 DEBIAN_FILES=deb/control deb/postinst
-OPT_FILES=workerengine env.example regauth.json.example
+OPT_FILES=workerengine deb/env.example deb/regauth.json.example
+PACKAGE_DIR=workerengine_${VERSION}
+
 
 build: clean
 	go build -v -ldflags='-s -w'
-	mkdir -p ./workerengine_amd64/DEBIAN
-	cp ${DEBIAN_FILES} ./workerengine_amd64/DEBIAN/
-	mkdir -p ./workerengine_amd64/usr/lib/systemd/system
-	cp workerengine.service ./workerengine_amd64/usr/lib/systemd/system/
-	mkdir -p ./workerengine_amd64/opt/workerengine
-	cp -r ${OPT_FILES} ./workerengine_amd64/opt/workerengine/
-	dpkg-deb --build --root-owner-group workerengine_amd64
+	mkdir -p ./${PACKAGE_DIR}/DEBIAN
+	cp ${DEBIAN_FILES} ./${PACKAGE_DIR}/DEBIAN/
+	mkdir -p ./${PACKAGE_DIR}/usr/lib/systemd/system
+	cp deb/workerengine.service ./${PACKAGE_DIR}/usr/lib/systemd/system/
+	mkdir -p ./${PACKAGE_DIR}/opt/workerengine
+	cp -r ${OPT_FILES} ./${PACKAGE_DIR}/opt/workerengine/
+	dpkg-deb --build --root-owner-group ${PACKAGE_DIR}
+
+install: build
+	dpkg -i ${PACKAGE_DIR}.deb
 
 clean:
-	rm -r -f workerengine_amd64 workerengine_amd64.deb
+	rm -r -f ${PACKAGE_DIR} ${PACKAGE_DIR}.deb
