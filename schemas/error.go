@@ -1,7 +1,7 @@
 package schemas
 
 type ErrorResponse struct {
-	Code    int      `json:"code"`
-	Details []string `json:"details,omitempty"`
-	Message string   `json:"message"`
+	Code    int     `json:"code"`
+	Message string  `json:"message"`
+	Errors  []error `json:"details,omitempty"`
 }

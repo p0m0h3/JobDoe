@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -36,14 +37,14 @@ func CreateTask(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(schemas.ErrorResponse{Code: fiber.StatusBadRequest})
 	}
 
-	badFields, err := ValidateRequest[schemas.CreateTaskRequest](req)
+	err := ValidateRequest[schemas.CreateTaskRequest](req)
 	if err != nil {
-		return BadRequestError(c, badFields)
+		return BadRequestError(c, []error{err})
 	}
 
 	task, err := state.NewTask(req)
 	if err != nil {
-		return BadRequestError(c, nil)
+		return BadRequestError(c, []error{err})
 	}
 
 	id, err := state.StartTask(task)
@@ -85,7 +86,7 @@ func GetTask(c *fiber.Ctx) error {
 	result, ok := state.Tasks[c.Params("id")]
 	state.UpdateTask(result)
 	if !ok {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{errors.New("id")})
 	}
 	return c.JSON(result)
 }
@@ -106,7 +107,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 	task, ok := state.Tasks[c.Params("id")]
 	state.UpdateTask(task)
 	if !ok || task.Status != "exited" {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{errors.New("id")})
 	}
 	archive := &bytes.Buffer{}
 
@@ -152,7 +153,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 func DeleteTask(c *fiber.Ctx) error {
 	result, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{errors.New("id")})
 	}
 
 	if err := podman.DeleteContainer(result.ID); err != nil {
@@ -195,12 +196,12 @@ func PruneTasks(c *fiber.Ctx) error {
 func GetTaskLog(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{errors.New("id")})
 	}
 
 	stderr, err := strconv.ParseBool(c.Query("stderr", "false"))
 	if err != nil {
-		return BadRequestError(c, []string{"stderr query parameter couldn't be parsed"})
+		return BadRequestError(c, []error{errors.New("stderr")})
 	}
 
 	output := make(chan string, 1024)
@@ -213,7 +214,7 @@ func GetTaskLog(c *fiber.Ctx) error {
 	}()
 
 	if err != nil {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{err})
 	}
 
 	var logs strings.Builder
@@ -273,7 +274,7 @@ func StreamTaskLog(c *websocket.Conn) {
 func GetTaskStats(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{errors.New("id")})
 	}
 	data, err := podman.GetContainerStats(t.ID)
 	if err != nil || len(data.Stats) < 1 {
@@ -313,7 +314,7 @@ func GetTaskStats(c *fiber.Ctx) error {
 func WaitOnTask(c *fiber.Ctx) error {
 	t, ok := state.Tasks[c.Params("id")]
 	if !ok {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{errors.New("id")})
 	}
 
 	err := podman.WaitOnContainer(t.ID)

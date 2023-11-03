@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+
 	"git.fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/fiber/v2"
 )
@@ -38,7 +40,7 @@ func GetAllTools(c *fiber.Ctx) error {
 func GetTool(c *fiber.Ctx) error {
 	tool, ok := state.Tools[c.Params("name")]
 	if !ok {
-		return NotFoundError(c)
+		return NotFoundError(c, []error{errors.New("name")})
 	}
 
 	return c.JSON(tool)
