@@ -5,14 +5,12 @@ import (
 	"bytes"
 	b64 "encoding/base64"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"strings"
 
-	"fuzz.codes/fuzzercloud/tsf"
-	"fuzz.codes/fuzzercloud/workerengine/podman"
-	"fuzz.codes/fuzzercloud/workerengine/schemas"
+	"git.fuzz.codes/fuzzercloud/workerengine/podman"
+	"git.fuzz.codes/fuzzercloud/workerengine/schemas"
 )
 
 const (
@@ -21,14 +19,6 @@ const (
 )
 
 var Tasks map[string]*schemas.Task
-
-func injectVariable(c []string, p string, v string) {
-	for i, slice := range c {
-		if strings.Contains(slice, p) {
-			c[i] = strings.ReplaceAll(c[i], p, v)
-		}
-	}
-}
 
 func makeArchiveFromFiles(files map[string]string) io.Reader {
 	buffer := &bytes.Buffer{}
@@ -61,39 +51,6 @@ func copyTaskFilesIntoContainer(t *schemas.Task) error {
 	return podman.CopyIntoContainer(t.ID, ar, FILES_PREFIX)
 }
 
-func findProfile(t *tsf.Tool, profName string) (tsf.Profile, bool) {
-	for _, prof := range t.Execute.Profiles {
-		if prof.Name == profName {
-			return prof, true
-		}
-	}
-
-	return tsf.Profile{}, false
-}
-
-func findModifiers(t *tsf.Tool, modNames []string) ([]string, bool) {
-	result := make([]string, 0)
-	found := false
-
-	for _, modName := range modNames {
-		for _, mod := range t.Execute.Modifiers {
-			if modName == mod.Name {
-				result = append(result, mod.Format)
-				found = true
-			}
-		}
-	}
-
-	return result, found
-}
-
-func formatVariable(input tsf.Input, value string) string {
-	if input.Format != "" {
-		return strings.ReplaceAll(input.Format, "%s", value)
-	}
-	return value
-}
-
 func ReadTasks() error {
 	containers, err := podman.GetAllContainers()
 	if err != nil {
@@ -116,59 +73,42 @@ func ResetTasks() {
 }
 
 func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
-	tool, ok := Tools[req.ToolID]
-	if !ok {
+	tool, found := Tools[req.ToolID]
+	if !found {
 		return nil, errors.New("could not find tool")
 	}
 	t := &schemas.Task{
 		Command: make([]string, 0),
 		Env:     req.Env,
-		Tool: schemas.Tool{
-			ID:   req.ToolID,
-			Spec: tool,
-		},
-		Files: make(map[string]string),
+		Tool:    tool,
+		Files:   make(map[string]string),
 	}
 
 	t.Command = append(t.Command, tool.Execute.Command)
 
-	if profile, found := findProfile(tool, req.Profile); found {
-		profileTokens := strings.Split(profile.Format, " ")
-		t.Command = append(t.Command, profileTokens...)
-	}
+	var format []string
+	var err error
 
-	if modifiers, found := findModifiers(tool, req.Modifiers); found {
-		t.Command = append(t.Command, modifiers...)
-	}
+	if req.Profile != "" {
+		format, err = tool.Execute.ProfileFormat(req.Profile, req.Inputs)
+		if err != nil {
+			return t, err
+		}
 
-	for _, iovar := range tool.Execute.Inputs {
-		for k, v := range req.Inputs {
-			if iovar.Name == k {
-				if iovar.Type == tsf.FILE {
-					injectVariable(t.Command, fmt.Sprint("{", k, "}"), fmt.Sprint(FILES_PREFIX, k))
-					t.Files[k] = v
-
-				} else {
-					injectVariable(t.Command, fmt.Sprint("{", k, "}"), formatVariable(iovar, v))
-				}
-				break
-			}
+	} else if len(req.Modifiers) != 0 {
+		format, err = tool.Execute.Format(req.Modifiers, req.Inputs)
+		if err != nil {
+			return t, err
 		}
 	}
 
-	for _, outputFile := range tool.Execute.Outputs {
-		injectVariable(
-			t.Command,
-			fmt.Sprint("{", outputFile.Name, "}"),
-			fmt.Sprint(fmt.Sprint(FILES_PREFIX, OUTPUT_PREFIX), outputFile.Name),
-		)
-	}
+	t.Command = append(t.Command, format...)
 
 	return t, nil
 }
 
 func StartTask(t *schemas.Task) (string, error) {
-	c, err := podman.CreateContainer(t.Tool.Spec.Sandbox.Name, t.Command, t.Env)
+	c, err := podman.CreateContainer(t.Tool.Header.Image, t.Command, t.Env)
 	if err != nil {
 		return "", err
 	}

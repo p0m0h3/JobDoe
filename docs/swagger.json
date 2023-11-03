@@ -470,7 +470,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemas.Tool"
+                            "$ref": "#/definitions/tsf.Spec"
                         }
                     },
                     "404": {
@@ -562,20 +562,15 @@
                 }
             }
         },
-        "schemas.Tool": {
+        "tsf.Default": {
             "type": "object",
             "properties": {
-                "id": {
+                "default": {
                     "type": "string"
                 },
-                "spec": {
-                    "$ref": "#/definitions/tsf.Tool"
-                }
-            }
-        },
-        "tsf.EnvVar": {
-            "type": "object",
-            "properties": {
+                "modifier": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -590,25 +585,13 @@
                 "environment": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/tsf.EnvVar"
-                    }
-                },
-                "inputs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tsf.Input"
+                        "type": "string"
                     }
                 },
                 "modifiers": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/tsf.Modifier"
-                    }
-                },
-                "outputs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tsf.Output"
                     }
                 },
                 "profiles": {
@@ -619,37 +602,35 @@
                 }
             }
         },
-        "tsf.IOType": {
-            "type": "integer",
-            "enum": [
-                0,
-                1,
-                2,
-                3,
-                4
-            ],
-            "x-enum-varnames": [
-                "FILE",
-                "STRING",
-                "EMAIL",
-                "URL",
-                "DOMAIN"
-            ]
-        },
-        "tsf.Input": {
+        "tsf.Header": {
             "type": "object",
             "properties": {
-                "class": {
+                "category": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "environment": {
                     "type": "string"
                 },
-                "format": {
+                "human": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "type": {
-                    "$ref": "#/definitions/tsf.IOType"
+                "source": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "number"
                 }
             }
         },
@@ -664,21 +645,65 @@
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "tsf.Output": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "variables": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.Variable"
+                    }
                 }
             }
         },
         "tsf.Profile": {
             "type": "object",
             "properties": {
-                "format": {
+                "category": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "defaults": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tsf.Default"
+                    }
+                },
+                "human": {
+                    "type": "string"
+                },
+                "modifiers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "tsf.Spec": {
+            "type": "object",
+            "properties": {
+                "execute": {
+                    "$ref": "#/definitions/tsf.Execute"
+                },
+                "header": {
+                    "$ref": "#/definitions/tsf.Header"
+                }
+            }
+        },
+        "tsf.Variable": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "default": {
                     "type": "string"
                 },
                 "human": {
@@ -686,28 +711,18 @@
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "tsf.Sandbox": {
-            "type": "object",
-            "properties": {
-                "environment": {
+                },
+                "type": {
                     "type": "string"
                 },
-                "name": {
+                "validation": {
                     "type": "string"
-                }
-            }
-        },
-        "tsf.Tool": {
-            "type": "object",
-            "properties": {
-                "execute": {
-                    "$ref": "#/definitions/tsf.Execute"
                 },
-                "sandbox": {
-                    "$ref": "#/definitions/tsf.Sandbox"
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

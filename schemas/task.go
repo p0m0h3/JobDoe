@@ -1,6 +1,10 @@
 package schemas
 
-import "time"
+import (
+	"time"
+
+	"git.fuzz.codes/fuzzercloud/tsf"
+)
 
 type CreateTaskRequest struct {
 	ToolID    string            `json:"tool" validate:"required,ascii"`
@@ -16,7 +20,7 @@ type Task struct {
 	Env     map[string]string `json:"env"`
 	Status  string            `json:"status"`
 	Files   map[string]string `json:"-"`
-	Tool    Tool              `json:"-"`
+	Tool    *tsf.Spec         `json:"-"`
 }
 
 type GetTaskStatsResponse struct {

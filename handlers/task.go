@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"fuzz.codes/fuzzercloud/workerengine/podman"
-	"fuzz.codes/fuzzercloud/workerengine/schemas"
-	"fuzz.codes/fuzzercloud/workerengine/state"
+	"git.fuzz.codes/fuzzercloud/workerengine/podman"
+	"git.fuzz.codes/fuzzercloud/workerengine/schemas"
+	"git.fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 )

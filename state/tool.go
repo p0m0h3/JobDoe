@@ -6,10 +6,10 @@ import (
 	"os"
 	"strings"
 
-	"fuzz.codes/fuzzercloud/tsf"
+	"git.fuzz.codes/fuzzercloud/tsf"
 )
 
-var Tools map[string]*tsf.Tool
+var Tools map[string]*tsf.Spec
 
 func ReadTools() error {
 	entries, err := os.ReadDir(os.Getenv("TOOLS_DIRECTORY"))
@@ -29,7 +29,7 @@ func ReadTools() error {
 				log.Println(fmt.Errorf("%v (Error parsing TSF file %s)", err, toolFile.Name()))
 			}
 			if err == nil {
-				Tools[strings.TrimSuffix(toolFile.Name(), ".toml")] = tool
+				Tools[strings.TrimSuffix(toolFile.Name(), ".toml")] = &tool
 			}
 		}
 	}

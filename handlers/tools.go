@@ -1,10 +1,7 @@
 package handlers
 
 import (
-	"strings"
-
-	"fuzz.codes/fuzzercloud/workerengine/schemas"
-	"fuzz.codes/fuzzercloud/workerengine/state"
+	"git.fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -34,7 +31,7 @@ func GetAllTools(c *fiber.Ctx) error {
 // @Param        name  path  string  true  "Tool name"
 // @Accept       json
 // @Produce      json
-// @Success      200 {object} schemas.Tool
+// @Success      200 {object} tsf.Spec
 // @Failure      500 {object} schemas.ErrorResponse
 // @Failure      404 {object} schemas.ErrorResponse
 // @Router       /v1/tool/{name} [get]
@@ -44,10 +41,5 @@ func GetTool(c *fiber.Ctx) error {
 		return NotFoundError(c)
 	}
 
-	return c.JSON(
-		schemas.Tool{
-			ID:   strings.TrimSuffix(c.Params("name"), ".toml"),
-			Spec: tool,
-		},
-	)
+	return c.JSON(tool)
 }

@@ -3,7 +3,7 @@ package handlers
 import (
 	"errors"
 
-	"fuzz.codes/fuzzercloud/workerengine/schemas"
+	"git.fuzz.codes/fuzzercloud/workerengine/schemas"
 	"github.com/gofiber/fiber/v2"
 )
 

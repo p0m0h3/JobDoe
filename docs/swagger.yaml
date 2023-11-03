@@ -46,15 +46,12 @@ definitions:
       status:
         type: string
     type: object
-  schemas.Tool:
+  tsf.Default:
     properties:
-      id:
+      default:
         type: string
-      spec:
-        $ref: '#/definitions/tsf.Tool'
-    type: object
-  tsf.EnvVar:
-    properties:
+      modifier:
+        type: string
       name:
         type: string
     type: object
@@ -64,49 +61,37 @@ definitions:
         type: string
       environment:
         items:
-          $ref: '#/definitions/tsf.EnvVar'
-        type: array
-      inputs:
-        items:
-          $ref: '#/definitions/tsf.Input'
+          type: string
         type: array
       modifiers:
         items:
           $ref: '#/definitions/tsf.Modifier'
-        type: array
-      outputs:
-        items:
-          $ref: '#/definitions/tsf.Output'
         type: array
       profiles:
         items:
           $ref: '#/definitions/tsf.Profile'
         type: array
     type: object
-  tsf.IOType:
-    enum:
-    - 0
-    - 1
-    - 2
-    - 3
-    - 4
-    type: integer
-    x-enum-varnames:
-    - FILE
-    - STRING
-    - EMAIL
-    - URL
-    - DOMAIN
-  tsf.Input:
+  tsf.Header:
     properties:
-      class:
+      category:
+        items:
+          type: string
+        type: array
+      environment:
         type: string
-      format:
+      human:
+        type: string
+      id:
+        type: string
+      image:
         type: string
       name:
         type: string
-      type:
-        $ref: '#/definitions/tsf.IOType'
+      source:
+        type: string
+      version:
+        type: number
     type: object
   tsf.Modifier:
     properties:
@@ -116,34 +101,57 @@ definitions:
         type: string
       name:
         type: string
-    type: object
-  tsf.Output:
-    properties:
-      name:
-        type: string
+      order:
+        type: integer
+      variables:
+        items:
+          $ref: '#/definitions/tsf.Variable'
+        type: array
     type: object
   tsf.Profile:
     properties:
-      format:
+      category:
+        items:
+          type: string
+        type: array
+      defaults:
+        items:
+          $ref: '#/definitions/tsf.Default'
+        type: array
+      human:
+        type: string
+      modifiers:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+    type: object
+  tsf.Spec:
+    properties:
+      execute:
+        $ref: '#/definitions/tsf.Execute'
+      header:
+        $ref: '#/definitions/tsf.Header'
+    type: object
+  tsf.Variable:
+    properties:
+      class:
+        type: string
+      default:
         type: string
       human:
         type: string
       name:
         type: string
-    type: object
-  tsf.Sandbox:
-    properties:
-      environment:
+      type:
         type: string
-      name:
+      validation:
         type: string
-    type: object
-  tsf.Tool:
-    properties:
-      execute:
-        $ref: '#/definitions/tsf.Execute'
-      sandbox:
-        $ref: '#/definitions/tsf.Sandbox'
+      values:
+        items:
+          type: string
+        type: array
     type: object
 host: 127.0.0.1:7001
 info:
@@ -440,7 +448,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemas.Tool'
+            $ref: '#/definitions/tsf.Spec'
         "404":
           description: Not Found
           schema:

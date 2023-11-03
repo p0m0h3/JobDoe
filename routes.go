@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fuzz.codes/fuzzercloud/workerengine/handlers"
+	"git.fuzz.codes/fuzzercloud/workerengine/handlers"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 )
