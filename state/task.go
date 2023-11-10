@@ -84,6 +84,11 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		Files:   make(map[string]string),
 	}
 
+	if req.Command != nil {
+		t.Command = req.Command
+		return t, nil
+	}
+
 	t.Command = append(t.Command, tool.Execute.Command)
 
 	var format []string

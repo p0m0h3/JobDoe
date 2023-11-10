@@ -7,11 +7,12 @@ import (
 )
 
 type CreateTaskRequest struct {
-	ToolID    string            `json:"tool" validate:"required,ascii"`
-	Modifiers []string          `json:"modifiers" validate:"ascii"`
-	Profile   string            `json:"profile" validate:"ascii"`
-	Inputs    map[string]string `json:"inputs"`
-	Env       map[string]string `json:"env"`
+	ToolID    string                       `json:"tool" validate:"required,printascii"`
+	Modifiers []string                     `json:"modifiers" validate:"printascii"`
+	Profile   string                       `json:"profile" validate:"printascii"`
+	Command   []string                     `json:"command" validate:"printascii"`
+	Inputs    map[string]map[string]string `json:"inputs"`
+	Env       map[string]string            `json:"env"`
 }
 
 type Task struct {
