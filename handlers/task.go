@@ -64,10 +64,14 @@ func CreateTask(c *fiber.Ctx) error {
 // @Tags         tasks
 // @Accept       json
 // @Produce      json
-// @Success      200 {object} schemas.Task
+// @Success      200 {object} []schemas.Task
 // @Router       /v1/task [get]
 func GetAllTasks(c *fiber.Ctx) error {
-	return c.JSON(state.Tasks)
+	result := make([]*schemas.Task, 0)
+	for _, task := range state.Tasks {
+		result = append(result, task)
+	}
+	return c.JSON(result)
 }
 
 // GetTask godoc

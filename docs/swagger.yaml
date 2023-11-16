@@ -249,7 +249,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemas.Task'
+            items:
+              $ref: '#/definitions/schemas.Task'
+            type: array
       security:
       - ApiKeyAuth: []
       summary: Get a list of all tasks

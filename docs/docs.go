@@ -75,7 +75,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemas.Task"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/schemas.Task"
+                            }
                         }
                     }
                 }
