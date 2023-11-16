@@ -21,7 +21,7 @@ import (
 func Ping(c *fiber.Ctx) error {
 	return c.JSON(schemas.PingResponse{
 		Version: "v0.1.0",
-		Spec:    "v0.5.3",
+		Spec:    "v0.5.4",
 		Mode:    os.Getenv("MODE"),
 		Tasks:   len(state.Tasks),
 		Tools:   len(state.Tools),

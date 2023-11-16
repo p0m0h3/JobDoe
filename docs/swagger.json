@@ -4,7 +4,7 @@
         "description": "WorkerEngine is a sandbox API to execute TSF based software.",
         "title": "WorkerEngine API",
         "contact": {},
-        "version": "1.0"
+        "version": "v0.1.0"
     },
     "host": "127.0.0.1:7001",
     "paths": {
@@ -578,6 +578,12 @@
                 "tool"
             ],
             "properties": {
+                "command": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "env": {
                     "type": "object",
                     "additionalProperties": {
@@ -587,7 +593,10 @@
                 "inputs": {
                     "type": "object",
                     "additionalProperties": {
-                        "type": "string"
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
                     }
                 },
                 "modifiers": {
@@ -644,6 +653,11 @@
         },
         "tsf.Default": {
             "type": "object",
+            "required": [
+                "default",
+                "modifier",
+                "name"
+            ],
             "properties": {
                 "default": {
                     "type": "string"
@@ -658,6 +672,9 @@
         },
         "tsf.Execute": {
             "type": "object",
+            "required": [
+                "command"
+            ],
             "properties": {
                 "command": {
                     "type": "string"
@@ -670,12 +687,14 @@
                 },
                 "modifiers": {
                     "type": "array",
+                    "uniqueItems": true,
                     "items": {
                         "$ref": "#/definitions/tsf.Modifier"
                     }
                 },
                 "profiles": {
                     "type": "array",
+                    "uniqueItems": true,
                     "items": {
                         "$ref": "#/definitions/tsf.Profile"
                     }
@@ -684,6 +703,12 @@
         },
         "tsf.Header": {
             "type": "object",
+            "required": [
+                "environment",
+                "id",
+                "image",
+                "version"
+            ],
             "properties": {
                 "category": {
                     "type": "array",
@@ -692,7 +717,11 @@
                     }
                 },
                 "environment": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "jails",
+                        "oci"
+                    ]
                 },
                 "human": {
                     "type": "string"
@@ -716,6 +745,10 @@
         },
         "tsf.Modifier": {
             "type": "object",
+            "required": [
+                "format",
+                "name"
+            ],
             "properties": {
                 "format": {
                     "type": "string"
@@ -739,6 +772,9 @@
         },
         "tsf.Profile": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "category": {
                     "type": "array",
@@ -768,6 +804,10 @@
         },
         "tsf.Spec": {
             "type": "object",
+            "required": [
+                "execute",
+                "header"
+            ],
             "properties": {
                 "execute": {
                     "$ref": "#/definitions/tsf.Execute"
@@ -779,6 +819,9 @@
         },
         "tsf.Variable": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "class": {
                     "type": "string"
@@ -793,7 +836,18 @@
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "string",
+                        "url",
+                        "domain",
+                        "email",
+                        "file",
+                        "output",
+                        "number",
+                        "enum",
+                        "list"
+                    ]
                 },
                 "validation": {
                     "type": "string"

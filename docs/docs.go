@@ -586,6 +586,12 @@ const docTemplate = `{
                 "tool"
             ],
             "properties": {
+                "command": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "env": {
                     "type": "object",
                     "additionalProperties": {
@@ -595,7 +601,10 @@ const docTemplate = `{
                 "inputs": {
                     "type": "object",
                     "additionalProperties": {
-                        "type": "string"
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
                     }
                 },
                 "modifiers": {
@@ -652,6 +661,11 @@ const docTemplate = `{
         },
         "tsf.Default": {
             "type": "object",
+            "required": [
+                "default",
+                "modifier",
+                "name"
+            ],
             "properties": {
                 "default": {
                     "type": "string"
@@ -666,6 +680,9 @@ const docTemplate = `{
         },
         "tsf.Execute": {
             "type": "object",
+            "required": [
+                "command"
+            ],
             "properties": {
                 "command": {
                     "type": "string"
@@ -678,12 +695,14 @@ const docTemplate = `{
                 },
                 "modifiers": {
                     "type": "array",
+                    "uniqueItems": true,
                     "items": {
                         "$ref": "#/definitions/tsf.Modifier"
                     }
                 },
                 "profiles": {
                     "type": "array",
+                    "uniqueItems": true,
                     "items": {
                         "$ref": "#/definitions/tsf.Profile"
                     }
@@ -692,6 +711,12 @@ const docTemplate = `{
         },
         "tsf.Header": {
             "type": "object",
+            "required": [
+                "environment",
+                "id",
+                "image",
+                "version"
+            ],
             "properties": {
                 "category": {
                     "type": "array",
@@ -700,7 +725,11 @@ const docTemplate = `{
                     }
                 },
                 "environment": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "jails",
+                        "oci"
+                    ]
                 },
                 "human": {
                     "type": "string"
@@ -724,6 +753,10 @@ const docTemplate = `{
         },
         "tsf.Modifier": {
             "type": "object",
+            "required": [
+                "format",
+                "name"
+            ],
             "properties": {
                 "format": {
                     "type": "string"
@@ -747,6 +780,9 @@ const docTemplate = `{
         },
         "tsf.Profile": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "category": {
                     "type": "array",
@@ -776,6 +812,10 @@ const docTemplate = `{
         },
         "tsf.Spec": {
             "type": "object",
+            "required": [
+                "execute",
+                "header"
+            ],
             "properties": {
                 "execute": {
                     "$ref": "#/definitions/tsf.Execute"
@@ -787,6 +827,9 @@ const docTemplate = `{
         },
         "tsf.Variable": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "class": {
                     "type": "string"
@@ -801,7 +844,18 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "string",
+                        "url",
+                        "domain",
+                        "email",
+                        "file",
+                        "output",
+                        "number",
+                        "enum",
+                        "list"
+                    ]
                 },
                 "validation": {
                     "type": "string"
@@ -826,7 +880,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "v0.1.0",
 	Host:             "127.0.0.1:7001",
 	BasePath:         "",
 	Schemes:          []string{},
