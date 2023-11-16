@@ -14,8 +14,7 @@ import (
 )
 
 const (
-	FILES_PREFIX  = "/files/"
-	OUTPUT_PREFIX = "output/"
+	FILES_PREFIX = "/files/"
 )
 
 var Tasks map[string]*schemas.Task
@@ -91,6 +90,26 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		return t, nil
 	}
 
+	// handle files
+	for modifierName, inputs := range req.Inputs {
+		modifier, err := tool.Execute.FindModifier(modifierName)
+		if err != nil {
+			return t, err
+		}
+
+		for _, variable := range modifier.Variables {
+			if variable.Type == "file" {
+				content, found := inputs[variable.Name]
+				if !found {
+					continue
+				}
+				t.Files[variable.Name] = content
+				inputs[variable.Name] = FILES_PREFIX + variable.Name
+			}
+		}
+	}
+
+	// handle profiles and modifiers
 	var format []string
 	var err error
 

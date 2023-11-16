@@ -111,7 +111,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 	}
 	archive := &bytes.Buffer{}
 
-	podman.CopyFromContainer(task.ID, archive, fmt.Sprint(state.FILES_PREFIX, state.OUTPUT_PREFIX))
+	podman.CopyFromContainer(task.ID, archive, fmt.Sprint(state.FILES_PREFIX, state.FILES_PREFIX))
 
 	data := tar.NewReader(archive)
 
@@ -132,7 +132,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 			return InternalServerError(c)
 		}
 		if output.Len() > 0 {
-			result[strings.TrimPrefix(hdr.Name, state.OUTPUT_PREFIX)] = output.String()
+			result[strings.TrimPrefix(hdr.Name, state.FILES_PREFIX)] = output.String()
 		}
 	}
 
