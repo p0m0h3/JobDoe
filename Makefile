@@ -1,6 +1,6 @@
 VERSION=v0.1.0
 DEBIAN_FILES=deb/control deb/postinst
-OPT_FILES=workerengine deb/env.example deb/regauth.json.example
+OPT_FILES=workerengine env.example regauth.json.example
 PACKAGE_DIR=workerengine_${VERSION}
 
 

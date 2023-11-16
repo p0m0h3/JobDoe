@@ -1,5 +1,5 @@
 Package: workerengine
-Version: 1.0
+Version: v0.1.0
 Architecture: amd64
 Maintainer: Fuzzercloud team
 Description: Worker engine to execute TSF tasks in a sandbox
