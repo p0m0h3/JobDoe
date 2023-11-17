@@ -257,6 +257,7 @@ func StreamTaskLog(c *websocket.Conn) {
 		select {
 		case <-ctx.Done():
 			c.Close()
+			return
 		case line := <-output:
 			c.WriteMessage(1, []byte(line))
 		}
