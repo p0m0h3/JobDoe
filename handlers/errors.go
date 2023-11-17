@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"git.fuzz.codes/fuzzercloud/workerengine/schemas"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -50,9 +51,13 @@ func NotFoundError(c *fiber.Ctx) error {
 }
 
 func BadRequestError(c *fiber.Ctx, errors []error) error {
+	messages := make([]string, 0)
+	for _, err := range errors {
+		messages = append(messages, err.(validator.FieldError).Field())
+	}
 	return c.Status(fiber.StatusBadRequest).JSON(schemas.ErrorResponse{
 		Code:    fiber.ErrBadRequest.Code,
 		Message: fiber.ErrBadRequest.Message,
-		Errors:  errors,
+		Errors:  messages,
 	})
 }

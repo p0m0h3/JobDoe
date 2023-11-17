@@ -37,9 +37,9 @@ func CreateTask(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(schemas.ErrorResponse{Code: fiber.StatusBadRequest})
 	}
 
-	err := ValidateRequest[schemas.CreateTaskRequest](req)
+	issues, err := schemas.ValidateRequest(req)
 	if err != nil {
-		return BadRequestError(c, []error{err})
+		return BadRequestError(c, issues)
 	}
 
 	task, err := state.NewTask(req)
