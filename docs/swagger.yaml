@@ -30,15 +30,16 @@ definitions:
     properties:
       code:
         type: integer
-      details:
-        items: {}
+      errors:
+        items:
+          type: string
         type: array
       message:
         type: string
     type: object
   schemas.Task:
     properties:
-      cmd:
+      command:
         items:
           type: string
         type: array

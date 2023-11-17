@@ -622,9 +622,11 @@
                 "code": {
                     "type": "integer"
                 },
-                "details": {
+                "errors": {
                     "type": "array",
-                    "items": {}
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "message": {
                     "type": "string"
@@ -634,7 +636,7 @@
         "schemas.Task": {
             "type": "object",
             "properties": {
-                "cmd": {
+                "command": {
                     "type": "array",
                     "items": {
                         "type": "string"

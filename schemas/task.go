@@ -17,7 +17,7 @@ type CreateTaskRequest struct {
 
 type Task struct {
 	ID      string            `json:"id"`
-	Command []string          `json:"cmd"`
+	Command []string          `json:"command"`
 	Env     map[string]string `json:"env"`
 	Status  string            `json:"status"`
 	Files   map[string]string `json:"-"`

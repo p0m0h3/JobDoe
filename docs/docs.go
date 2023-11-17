@@ -630,9 +630,11 @@ const docTemplate = `{
                 "code": {
                     "type": "integer"
                 },
-                "details": {
+                "errors": {
                     "type": "array",
-                    "items": {}
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "message": {
                     "type": "string"
@@ -642,7 +644,7 @@ const docTemplate = `{
         "schemas.Task": {
             "type": "object",
             "properties": {
-                "cmd": {
+                "command": {
                     "type": "array",
                     "items": {
                         "type": "string"
