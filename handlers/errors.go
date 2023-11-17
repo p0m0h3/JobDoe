@@ -50,10 +50,14 @@ func NotFoundError(c *fiber.Ctx) error {
 	})
 }
 
-func BadRequestError(c *fiber.Ctx, errors []error) error {
+func BadRequestError(c *fiber.Ctx, issues []error) error {
 	messages := make([]string, 0)
-	for _, err := range errors {
-		messages = append(messages, err.(validator.FieldError).Field())
+	for _, err := range issues {
+		if validation, ok := err.(validator.FieldError); ok {
+			messages = append(messages, validation.Field())
+		} else {
+			messages = append(messages, err.Error())
+		}
 	}
 	return c.Status(fiber.StatusBadRequest).JSON(schemas.ErrorResponse{
 		Code:    fiber.ErrBadRequest.Code,

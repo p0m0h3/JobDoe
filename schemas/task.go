@@ -7,7 +7,7 @@ import (
 )
 
 type CreateTaskRequest struct {
-	ToolID    string                       `json:"tool" validate:"required,printascii"`
+	Tool      string                       `json:"tool" validate:"required,printascii"`
 	Modifiers []string                     `json:"modifiers" validate:"printascii"`
 	Profile   string                       `json:"profile" validate:"printascii"`
 	Command   []string                     `json:"command" validate:"printascii"`

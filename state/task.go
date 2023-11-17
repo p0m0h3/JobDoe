@@ -72,7 +72,7 @@ func ResetTasks() {
 }
 
 func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
-	tool, found := Tools[req.ToolID]
+	tool, found := Tools[req.Tool]
 	if !found {
 		return nil, errors.New("could not find tool")
 	}
