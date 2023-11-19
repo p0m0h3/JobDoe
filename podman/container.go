@@ -5,12 +5,15 @@ import (
 	"github.com/containers/podman/v4/pkg/bindings/containers"
 	"github.com/containers/podman/v4/pkg/domain/entities"
 	"github.com/containers/podman/v4/pkg/specgen"
+	"github.com/opencontainers/runtime-spec/specs-go"
 )
 
 func CreateContainer(
 	image string,
 	command []string,
 	env map[string]string,
+	memoryLimit int64,
+	CPULimit uint64,
 ) (*entities.ContainerCreateResponse, error) {
 	err := PullImage(image)
 	if err != nil {
@@ -19,6 +22,13 @@ func CreateContainer(
 	s := specgen.NewSpecGenerator(image, false)
 	s.Command = command
 	s.Env = env
+	s.ResourceLimits = &specs.LinuxResources{}
+	s.ResourceLimits.Memory = &specs.LinuxMemory{
+		Limit: &memoryLimit,
+	}
+	s.ResourceLimits.CPU = &specs.LinuxCPU{
+		Shares: &CPULimit,
+	}
 
 	createResponse, err := containers.CreateWithSpec(Connection, s, nil)
 	if err != nil {

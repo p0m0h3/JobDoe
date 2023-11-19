@@ -587,6 +587,9 @@
                         "type": "string"
                     }
                 },
+                "cpuLimit": {
+                    "type": "integer"
+                },
                 "env": {
                     "type": "object",
                     "additionalProperties": {
@@ -601,6 +604,9 @@
                             "type": "string"
                         }
                     }
+                },
+                "memoryLimit": {
+                    "type": "integer"
                 },
                 "modifiers": {
                     "type": "array",
@@ -642,6 +648,9 @@
                         "type": "string"
                     }
                 },
+                "cpuLimit": {
+                    "type": "integer"
+                },
                 "env": {
                     "type": "object",
                     "additionalProperties": {
@@ -650,6 +659,9 @@
                 },
                 "id": {
                     "type": "string"
+                },
+                "memoryLimit": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"

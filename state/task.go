@@ -76,6 +76,14 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	if !found {
 		return nil, errors.New("could not find tool")
 	}
+
+	if req.MemoryLimit == 0 {
+		req.MemoryLimit = 209715200
+	}
+	if req.CPULimit == 0 {
+		req.CPULimit = 1
+	}
+
 	t := &schemas.Task{
 		Command: make([]string, 0),
 		Env:     req.Env,
@@ -132,7 +140,13 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 }
 
 func StartTask(t *schemas.Task) (string, error) {
-	c, err := podman.CreateContainer(t.Tool.Header.Image, t.Command, t.Env)
+	c, err := podman.CreateContainer(
+		t.Tool.Header.Image,
+		t.Command,
+		t.Env,
+		t.MemoryLimit,
+		t.CPULimit,
+	)
 	if err != nil {
 		return "", err
 	}

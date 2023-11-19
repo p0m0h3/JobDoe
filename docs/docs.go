@@ -595,6 +595,9 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "cpuLimit": {
+                    "type": "integer"
+                },
                 "env": {
                     "type": "object",
                     "additionalProperties": {
@@ -609,6 +612,9 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                },
+                "memoryLimit": {
+                    "type": "integer"
                 },
                 "modifiers": {
                     "type": "array",
@@ -650,6 +656,9 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "cpuLimit": {
+                    "type": "integer"
+                },
                 "env": {
                     "type": "object",
                     "additionalProperties": {
@@ -658,6 +667,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "string"
+                },
+                "memoryLimit": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
