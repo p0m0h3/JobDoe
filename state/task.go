@@ -77,11 +77,11 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		return nil, errors.New("could not find tool")
 	}
 
-	if req.MemoryLimit == 0 {
-		req.MemoryLimit = 209715200
+	if req.Memory == 0 {
+		req.Memory = 209715200
 	}
-	if req.CPULimit == 0 {
-		req.CPULimit = 1
+	if req.CPU == 0 {
+		req.CPU = 1
 	}
 
 	t := &schemas.Task{
@@ -144,8 +144,8 @@ func StartTask(t *schemas.Task) (string, error) {
 		t.Tool.Header.Image,
 		t.Command,
 		t.Env,
-		t.MemoryLimit,
-		t.CPULimit,
+		t.Memory,
+		t.CPU,
 	)
 	if err != nil {
 		return "", err

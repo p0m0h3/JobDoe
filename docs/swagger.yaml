@@ -5,7 +5,7 @@ definitions:
         items:
           type: string
         type: array
-      cpuLimit:
+      cpu:
         type: integer
       env:
         additionalProperties:
@@ -17,7 +17,7 @@ definitions:
             type: string
           type: object
         type: object
-      memoryLimit:
+      memory:
         type: integer
       modifiers:
         items:
@@ -47,7 +47,7 @@ definitions:
         items:
           type: string
         type: array
-      cpuLimit:
+      cpu:
         type: integer
       env:
         additionalProperties:
@@ -55,7 +55,7 @@ definitions:
         type: object
       id:
         type: string
-      memoryLimit:
+      memory:
         type: integer
       status:
         type: string

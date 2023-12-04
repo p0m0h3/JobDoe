@@ -587,7 +587,7 @@
                         "type": "string"
                     }
                 },
-                "cpuLimit": {
+                "cpu": {
                     "type": "integer"
                 },
                 "env": {
@@ -605,7 +605,7 @@
                         }
                     }
                 },
-                "memoryLimit": {
+                "memory": {
                     "type": "integer"
                 },
                 "modifiers": {
@@ -648,7 +648,7 @@
                         "type": "string"
                     }
                 },
-                "cpuLimit": {
+                "cpu": {
                     "type": "integer"
                 },
                 "env": {
@@ -660,7 +660,7 @@
                 "id": {
                     "type": "string"
                 },
-                "memoryLimit": {
+                "memory": {
                     "type": "integer"
                 },
                 "status": {

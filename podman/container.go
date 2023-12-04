@@ -12,8 +12,8 @@ func CreateContainer(
 	image string,
 	command []string,
 	env map[string]string,
-	memoryLimit int64,
-	CPULimit uint64,
+	memory int64,
+	CPU uint64,
 ) (*entities.ContainerCreateResponse, error) {
 	err := PullImage(image)
 	if err != nil {
@@ -24,10 +24,10 @@ func CreateContainer(
 	s.Env = env
 	s.ResourceLimits = &specs.LinuxResources{}
 	s.ResourceLimits.Memory = &specs.LinuxMemory{
-		Limit: &memoryLimit,
+		Limit: &memory,
 	}
 	s.ResourceLimits.CPU = &specs.LinuxCPU{
-		Shares: &CPULimit,
+		Shares: &CPU,
 	}
 
 	createResponse, err := containers.CreateWithSpec(Connection, s, nil)
