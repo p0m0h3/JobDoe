@@ -13,6 +13,8 @@ type CreateTaskRequest struct {
 	Command   []string                     `json:"command" validate:"printascii"`
 	Inputs    map[string]map[string]string `json:"inputs"`
 	Env       map[string]string            `json:"env"`
+	Memory    int64                        `json:"memory"`
+	CPU       uint64                       `json:"cpu"`
 }
 
 type Task struct {
@@ -22,6 +24,8 @@ type Task struct {
 	Status  string            `json:"status"`
 	Files   map[string]string `json:"-"`
 	Tool    *tsf.Spec         `json:"-"`
+	Memory  int64             `json:"memory"`
+	CPU     uint64            `json:"cpu"`
 }
 
 type GetTaskStatsResponse struct {

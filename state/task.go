@@ -15,6 +15,9 @@ import (
 
 const (
 	FILES_PREFIX = "/files/"
+	MIN_MEMORY   = 209715200
+	MIN_CPU      = 1
+	CPU_FREQ     = 5 // 500 MHz
 )
 
 var Tasks map[string]*schemas.Task
@@ -76,11 +79,21 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	if !found {
 		return nil, errors.New("could not find tool")
 	}
+
+	if req.Memory == 0 {
+		req.Memory = MIN_MEMORY
+	}
+	if req.CPU == 0 {
+		req.CPU = MIN_CPU
+	}
+
 	t := &schemas.Task{
 		Command: make([]string, 0),
 		Env:     req.Env,
 		Tool:    tool,
 		Files:   make(map[string]string),
+		Memory:  req.Memory,
+		CPU:     req.CPU,
 	}
 
 	t.Command = append(t.Command, tool.Execute.Command)
@@ -132,7 +145,13 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 }
 
 func StartTask(t *schemas.Task) (string, error) {
-	c, err := podman.CreateContainer(t.Tool.Header.Image, t.Command, t.Env)
+	c, err := podman.CreateContainer(
+		t.Tool.Header.Image,
+		t.Command,
+		t.Env,
+		t.Memory,
+		t.CPU*CPU_FREQ,
+	)
 	if err != nil {
 		return "", err
 	}
