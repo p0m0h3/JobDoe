@@ -22,9 +22,12 @@ func CreateContainer(
 	s := specgen.NewSpecGenerator(image, false)
 	s.Command = command
 	s.Env = env
+
 	s.ResourceLimits = &specs.LinuxResources{}
+	swap := 2 * memory
 	s.ResourceLimits.Memory = &specs.LinuxMemory{
 		Limit: &memory,
+		Swap:  &swap,
 	}
 	s.ResourceLimits.CPU = &specs.LinuxCPU{
 		Shares: &CPU,

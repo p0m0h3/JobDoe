@@ -15,6 +15,9 @@ import (
 
 const (
 	FILES_PREFIX = "/files/"
+	MIN_MEMORY   = 209715200
+	MIN_CPU      = 1
+	CPU_FREQ     = 5 // 500 MHz
 )
 
 var Tasks map[string]*schemas.Task
@@ -78,10 +81,10 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	}
 
 	if req.Memory == 0 {
-		req.Memory = 209715200
+		req.Memory = MIN_MEMORY
 	}
 	if req.CPU == 0 {
-		req.CPU = 1
+		req.CPU = MIN_CPU
 	}
 
 	t := &schemas.Task{
@@ -89,6 +92,8 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		Env:     req.Env,
 		Tool:    tool,
 		Files:   make(map[string]string),
+		Memory:  req.Memory,
+		CPU:     req.CPU,
 	}
 
 	t.Command = append(t.Command, tool.Execute.Command)
@@ -145,7 +150,7 @@ func StartTask(t *schemas.Task) (string, error) {
 		t.Command,
 		t.Env,
 		t.Memory,
-		t.CPU,
+		t.CPU*CPU_FREQ,
 	)
 	if err != nil {
 		return "", err
