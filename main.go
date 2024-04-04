@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/sha256"
 	"log"
-	"os"
 
 	_ "git.fuzz.codes/fuzzercloud/workerengine/docs"
 	"git.fuzz.codes/fuzzercloud/workerengine/handlers"
@@ -13,7 +12,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
-	"github.com/joho/godotenv"
 )
 
 var Mode string
@@ -36,29 +34,22 @@ func main() {
 
 	app.Use(logger.New())
 
-	err = godotenv.Load("env")
+	config, err := state.GetConfig()
 	if err != nil {
 		panic(err)
 	}
 
-	Mode = os.Getenv("MODE")
-
-	if Mode == "dev" {
+	if config.Mode == "dev" {
 		app.Get("/docs/*", swagger.HandlerDefault)
 	} else {
-		accessKeyHash = sha256.Sum256([]byte(os.Getenv("ACCESS_KEY")))
+		accessKeyHash = sha256.Sum256([]byte(config.Key))
 		app.Use(keyauth.New(keyauth.Config{
 			Validator:    keyValidator,
 			ErrorHandler: handlers.UnauthorizedError,
 		}))
 	}
 
-	err = podman.OpenConnection(os.Getenv("PODMAN_SOCKET_ADDRESS"))
-	if err != nil {
-		panic(err)
-	}
-
-	err = state.ReadTools()
+	err = podman.OpenConnection(config.Podman)
 	if err != nil {
 		panic(err)
 	}
@@ -70,5 +61,5 @@ func main() {
 
 	RegisterRoutes(app)
 
-	log.Fatal(app.Listen(os.Getenv("LISTEN_ON")))
+	log.Fatal(app.Listen(config.Listen))
 }

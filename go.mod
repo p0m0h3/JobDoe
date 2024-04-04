@@ -9,7 +9,6 @@ require (
 	github.com/gofiber/contrib/websocket v1.0.0
 	github.com/gofiber/fiber/v2 v2.47.0
 	github.com/gofiber/swagger v0.1.12
-	github.com/joho/godotenv v1.5.1
 	github.com/opencontainers/runtime-spec v1.1.0-rc.1
 	github.com/swaggo/swag v1.16.1
 )

@@ -15,10 +15,6 @@ func CreateContainer(
 	memory int64,
 	CPU uint64,
 ) (*entities.ContainerCreateResponse, error) {
-	err := PullImage(image)
-	if err != nil {
-		return nil, err
-	}
 	s := specgen.NewSpecGenerator(image, false)
 	s.Command = command
 	s.Env = env

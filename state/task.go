@@ -145,6 +145,16 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 }
 
 func StartTask(t *schemas.Task) (string, error) {
+	config, err := GetConfig()
+	if err != nil {
+		return "", err
+	}
+
+	err = podman.PullImage(t.Tool.Header.Image, config.RegistryAuth)
+	if err != nil {
+		return "", err
+	}
+
 	c, err := podman.CreateContainer(
 		t.Tool.Header.Image,
 		t.Command,
