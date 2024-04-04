@@ -449,9 +449,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Upload a custom tsf file to use",
+                "description": "Upload a new spec to use",
                 "consumes": [
-                    "text/plain"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -462,12 +462,12 @@
                 "summary": "Create a new spec",
                 "parameters": [
                     {
-                        "description": "new tool spec",
+                        "description": "new spec",
                         "name": "spec",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/tsf.Spec"
                         }
                     }
                 ],
@@ -511,7 +511,10 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/tsf.Spec"
+                                }
                             }
                         }
                     },

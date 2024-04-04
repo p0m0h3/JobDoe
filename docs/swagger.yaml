@@ -486,15 +486,15 @@ paths:
   /v1/tool:
     post:
       consumes:
-      - text/plain
-      description: Upload a custom tsf file to use
+      - application/json
+      description: Upload a new spec to use
       parameters:
-      - description: new tool spec
+      - description: new spec
         in: body
         name: spec
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/tsf.Spec'
       produces:
       - application/json
       responses:
@@ -523,7 +523,9 @@ paths:
           description: OK
           schema:
             items:
-              type: string
+              items:
+                $ref: '#/definitions/tsf.Spec'
+              type: array
             type: array
         "500":
           description: Internal Server Error

@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"encoding/json"
+
 	"git.fuzz.codes/fuzzercloud/tsf"
 	"git.fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +15,7 @@ import (
 // @Tags         tools
 // @Accept       json
 // @Produce      json
-// @Success      200 {array} string
+// @Success      200 {array} []tsf.Spec
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /v1/tool/ [get]
 func GetAllTools(c *fiber.Ctx) error {
@@ -47,21 +49,22 @@ func GetTool(c *fiber.Ctx) error {
 
 // CreateTool godoc
 // @Summary      Create a new spec
-// @Description  Upload a custom tsf file to use
+// @Description  Upload a new spec to use
 // @Security     ApiKeyAuth
 // @Tags         tools
-// @Accept       plain
+// @Accept       json
 // @Produce      json
-// @Param        spec body string true "new tool spec"
+// @Param        spec body tsf.Spec true "new spec"
 // @Success      200 {object} tsf.Spec
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /v1/tool [post]
 func CreateTool(c *fiber.Ctx) error {
-	tool, err := tsf.Parse(c.Body())
+	tool := &tsf.Spec{}
+	err := json.Unmarshal(c.Body(), tool)
 	if err != nil {
 		return BadRequestError(c, []error{err})
 	}
-	state.Tools[tool.Header.ID] = &tool
+	state.Tools[tool.Header.ID] = tool
 
 	return c.JSON(tool)
 }
