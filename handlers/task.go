@@ -237,6 +237,7 @@ func StreamTaskLog(c *websocket.Conn) {
 	if !ok {
 		c.WriteMessage(1, []byte(fiber.ErrNotFound.Message))
 		c.Close()
+		return
 	}
 
 	var err error
