@@ -24,7 +24,7 @@ func RegisterV1Routes(v1 fiber.Router) {
 	tool := v1.Group("/tool")
 	tool.Get("/", handlers.GetAllTools)
 	tool.Get("/:name", handlers.GetTool)
-	tool.Post("/", handlers.CreateTool)
+	tool.Put("/", handlers.CreateTool)
 
 }
 

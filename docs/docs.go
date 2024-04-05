@@ -450,7 +450,7 @@ const docTemplate = `{
             }
         },
         "/v1/tool": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -479,8 +479,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/tsf.Spec"
                         }

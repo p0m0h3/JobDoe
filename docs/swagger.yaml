@@ -484,7 +484,7 @@ paths:
       tags:
       - tasks
   /v1/tool:
-    post:
+    put:
       consumes:
       - application/json
       description: Upload a new spec to use
@@ -498,8 +498,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/tsf.Spec'
         "500":

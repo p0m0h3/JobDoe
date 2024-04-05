@@ -55,9 +55,9 @@ func GetTool(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Param        spec body tsf.Spec true "new spec"
-// @Success      200 {object} tsf.Spec
+// @Success      201 {object} tsf.Spec
 // @Failure      500 {object} schemas.ErrorResponse
-// @Router       /v1/tool [post]
+// @Router       /v1/tool [put]
 func CreateTool(c *fiber.Ctx) error {
 	tool := &tsf.Spec{}
 	err := json.Unmarshal(c.Body(), tool)
@@ -66,5 +66,5 @@ func CreateTool(c *fiber.Ctx) error {
 	}
 	state.Tools[tool.Header.ID] = tool
 
-	return c.JSON(tool)
+	return c.Status(fiber.StatusCreated).JSON(tool)
 }
