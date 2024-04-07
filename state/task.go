@@ -96,7 +96,7 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		CPU:     req.CPU,
 	}
 
-	t.Command = append(t.Command, tool.Execute.Command)
+	t.Command = append(t.Command, strings.Split(tool.Execute.Command, " ")...)
 
 	if req.Command != nil {
 		t.Command = append(t.Command, req.Command...)
