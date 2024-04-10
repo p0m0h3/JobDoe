@@ -9,15 +9,17 @@ import (
 	"os"
 	"strings"
 
+	"git.fuzz.codes/fuzzercloud/tsf"
 	"git.fuzz.codes/fuzzercloud/workerengine/podman"
 	"git.fuzz.codes/fuzzercloud/workerengine/schemas"
 )
 
 const (
-	FILES_PREFIX = "/files/"
-	MIN_MEMORY   = 209715200
-	MIN_CPU      = 1
-	CPU_FREQ     = 5 // 500 MHz
+	FILES_PREFIX   = "/files/"
+	OUTPUTS_PREFIX = "/outputs/"
+	MIN_MEMORY     = 209715200
+	MIN_CPU        = 1
+	CPU_FREQ       = 5 // 500 MHz
 )
 
 var Tasks map[string]*schemas.Task
@@ -75,9 +77,14 @@ func ResetTasks() {
 }
 
 func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
+	// TODO: serious refactor needed for formatting the command and output files
 	tool, found := Tools[req.Tool]
 	if !found {
 		return nil, errors.New("could not find tool")
+	}
+
+	if req.Inputs == nil {
+		req.Inputs = make(map[string]map[string]string)
 	}
 
 	if req.Memory == 0 {
@@ -124,19 +131,41 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 
 	// handle profiles and modifiers
 	var format []string
+	var modifiers []*tsf.Modifier
 	var err error
 
 	if req.Profile != "" {
-		format, err = tool.Execute.ProfileFormat(req.Profile, req.Inputs)
+		// find profile
+		profile, err := tool.Execute.FindProfile(req.Profile)
 		if err != nil {
 			return t, err
 		}
+		req.Inputs = tool.Execute.SetProfileDefaults(profile, req.Inputs)
 
-	} else if len(req.Modifiers) != 0 {
-		format, err = tool.Execute.Format(req.Modifiers, req.Inputs)
+		modifiers, err = tool.Execute.FindModifiers(profile.Modifiers)
 		if err != nil {
 			return t, err
 		}
+	} else {
+		modifiers, err = tool.Execute.FindModifiers(req.Modifiers)
+		if err != nil {
+			return t, err
+		}
+	}
+
+	// handle output files
+	for _, modifier := range modifiers {
+		for _, variable := range modifier.Variables {
+			if variable.Type == "output" {
+				req.Inputs[modifier.Name] = make(map[string]string)
+				req.Inputs[modifier.Name][variable.Name] = OUTPUTS_PREFIX + variable.Name
+			}
+		}
+	}
+
+	format, err = tool.Execute.Format(modifiers, req.Inputs)
+	if err != nil {
+		return t, err
 	}
 
 	t.Command = append(t.Command, format...)
@@ -172,6 +201,13 @@ func StartTask(t *schemas.Task) (string, error) {
 	err = copyTaskFilesIntoContainer(t)
 	if err != nil {
 		return c.ID, err
+	}
+
+	// make the empty output directory
+	outputArchive := makeArchiveFromFiles(make(map[string]string))
+	err = podman.CopyIntoContainer(t.ID, outputArchive, OUTPUTS_PREFIX)
+	if err != nil {
+		return t.ID, err
 	}
 
 	err = UpdateTask(t)

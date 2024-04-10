@@ -6,7 +6,6 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -115,7 +114,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 	}
 	archive := &bytes.Buffer{}
 
-	podman.CopyFromContainer(task.ID, archive, fmt.Sprint(state.FILES_PREFIX, state.FILES_PREFIX))
+	podman.CopyFromContainer(task.ID, archive, state.OUTPUTS_PREFIX)
 
 	data := tar.NewReader(archive)
 
@@ -136,7 +135,7 @@ func GetTaskOutputFiles(c *fiber.Ctx) error {
 			return InternalServerError(c)
 		}
 		if output.Len() > 0 {
-			result[strings.TrimPrefix(hdr.Name, state.FILES_PREFIX)] = output.String()
+			result[strings.TrimPrefix(hdr.Name, state.OUTPUTS_PREFIX[1:])] = output.String()
 		}
 	}
 
