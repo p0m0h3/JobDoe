@@ -17,7 +17,7 @@ import (
 var Mode string
 
 // @title WorkerEngine API
-// @version v0.1.0
+// @version v0.2.0
 // @description WorkerEngine is a sandbox API to execute TSF based software.
 // @host 127.0.0.1:7001
 // @securitydefinitions.apikey ApiKeyAuth

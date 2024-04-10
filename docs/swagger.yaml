@@ -208,7 +208,7 @@ info:
   contact: {}
   description: WorkerEngine is a sandbox API to execute TSF based software.
   title: WorkerEngine API
-  version: v0.1.0
+  version: v0.2.0
 paths:
   /v1:
     get:

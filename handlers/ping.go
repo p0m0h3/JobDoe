@@ -23,8 +23,8 @@ func Ping(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(schemas.PingResponse{
-		Version: "v0.1.0",
-		Spec:    "v0.5.4",
+		Version: "v0.2.0",
+		Spec:    "v0.6.0",
 		Mode:    config.Mode,
 		Tasks:   len(state.Tasks),
 		Tools:   len(state.Tools),
