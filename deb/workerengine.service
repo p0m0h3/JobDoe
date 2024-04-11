@@ -7,7 +7,6 @@ Wants=podman.socket
 [Service]
 Type=simple
 User=root
-EnvironmentFile=/opt/workerengine/env
 WorkingDirectory=/opt/workerengine
 ExecStart=/opt/workerengine/workerengine
 
