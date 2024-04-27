@@ -134,6 +134,11 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 	var modifiers []*tsf.Modifier
 	var err error
 
+	modifiers, err = tool.Execute.FindModifiers(req.Modifiers)
+	if err != nil {
+		return t, err
+	}
+
 	if req.Profile != "" {
 		// find profile
 		profile, err := tool.Execute.FindProfile(req.Profile)
@@ -142,15 +147,12 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 		}
 		req.Inputs = tool.Execute.SetProfileDefaults(profile, req.Inputs)
 
-		modifiers, err = tool.Execute.FindModifiers(profile.Modifiers)
+		profileModifiers, err := tool.Execute.FindModifiers(profile.Modifiers)
 		if err != nil {
 			return t, err
 		}
-	} else {
-		modifiers, err = tool.Execute.FindModifiers(req.Modifiers)
-		if err != nil {
-			return t, err
-		}
+
+		modifiers = append(modifiers, profileModifiers...)
 	}
 
 	// handle output files
