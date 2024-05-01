@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"git.fuzz.codes/fuzzercloud/workerengine/config"
 	"git.fuzz.codes/fuzzercloud/workerengine/schemas"
 	"git.fuzz.codes/fuzzercloud/workerengine/state"
 	"github.com/gofiber/fiber/v2"
@@ -17,7 +18,7 @@ import (
 // @Failure      500 {object} schemas.ErrorResponse
 // @Router       /v1 [get]
 func Ping(c *fiber.Ctx) error {
-	config, err := state.GetConfig()
+	conf, err := config.GetConfig()
 	if err != nil {
 		return InternalServerError(c)
 	}
@@ -25,7 +26,7 @@ func Ping(c *fiber.Ctx) error {
 	return c.JSON(schemas.PingResponse{
 		Version: "v0.2.0",
 		Spec:    "v0.6.0",
-		Mode:    config.Mode,
+		Mode:    conf.Mode,
 		Tasks:   len(state.Tasks),
 		Tools:   len(state.Tools),
 	})

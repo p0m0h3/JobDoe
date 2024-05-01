@@ -1,4 +1,4 @@
-package state
+package config
 
 import (
 	"encoding/json"
@@ -6,11 +6,12 @@ import (
 )
 
 type Config struct {
-	Listen       string `json:"listen"`
-	Mode         string `json:"mode"`
-	Podman       string `json:"podman"`
-	Key          string `json:"key"`
-	RegistryAuth string `json:"regauth"`
+	Listen       string   `json:"listen"`
+	Mode         string   `json:"mode"`
+	Podman       string   `json:"podman"`
+	Key          string   `json:"key"`
+	RegistryAuth string   `json:"regauth"`
+	Proxies      []string `json:"proxies"`
 }
 
 var config = &Config{}

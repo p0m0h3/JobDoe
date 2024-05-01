@@ -1,12 +1,34 @@
 package podman
 
 import (
+	"math/rand"
+
+	"git.fuzz.codes/fuzzercloud/workerengine/config"
 	"github.com/containers/podman/v4/libpod/define"
 	"github.com/containers/podman/v4/pkg/bindings/containers"
 	"github.com/containers/podman/v4/pkg/domain/entities"
 	"github.com/containers/podman/v4/pkg/specgen"
 	"github.com/opencontainers/runtime-spec/specs-go"
 )
+
+func appendTaskProxyEnv(env map[string]string) map[string]string {
+	c, err := config.GetConfig()
+	if err != nil {
+		return env
+	}
+
+	if env == nil {
+		env = make(map[string]string)
+	}
+
+	proxy := "http://" + c.Proxies[rand.Intn(len(c.Proxies))]
+	env["http_proxy"] = proxy
+	env["HTTP_PROXY"] = proxy
+	env["https_proxy"] = proxy
+	env["HTTPS_PROXY"] = proxy
+
+	return env
+}
 
 func CreateContainer(
 	image string,
@@ -17,7 +39,7 @@ func CreateContainer(
 ) (*entities.ContainerCreateResponse, error) {
 	s := specgen.NewSpecGenerator(image, false)
 	s.Command = command
-	s.Env = env
+	s.Env = appendTaskProxyEnv(env)
 
 	s.ResourceLimits = &specs.LinuxResources{}
 	swap := 2 * memory

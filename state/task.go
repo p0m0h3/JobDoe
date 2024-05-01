@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"git.fuzz.codes/fuzzercloud/tsf"
+	"git.fuzz.codes/fuzzercloud/workerengine/config"
 	"git.fuzz.codes/fuzzercloud/workerengine/podman"
 	"git.fuzz.codes/fuzzercloud/workerengine/schemas"
 )
@@ -176,7 +177,7 @@ func NewTask(req schemas.CreateTaskRequest) (*schemas.Task, error) {
 }
 
 func StartTask(t *schemas.Task) (string, error) {
-	config, err := GetConfig()
+	config, err := config.GetConfig()
 	if err != nil {
 		return "", err
 	}

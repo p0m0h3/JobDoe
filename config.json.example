@@ -3,5 +3,8 @@
     "mode": "dev",
     "podman": "unix:///usr/lib/systemd/user/podman.socket",
     "key": "ARandomSecureToken",
-    "regauth": "regauth.json"
+    "regauth": "regauth.json",
+    "proxies": [
+        "user:password@1.2.3.4:80"
+    ]
 }

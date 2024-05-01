@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"log"
 
+	"git.fuzz.codes/fuzzercloud/workerengine/config"
 	_ "git.fuzz.codes/fuzzercloud/workerengine/docs"
 	"git.fuzz.codes/fuzzercloud/workerengine/handlers"
 	"git.fuzz.codes/fuzzercloud/workerengine/podman"
@@ -34,22 +35,22 @@ func main() {
 
 	app.Use(logger.New())
 
-	config, err := state.GetConfig()
+	conf, err := config.GetConfig()
 	if err != nil {
 		panic(err)
 	}
 
-	if config.Mode == "dev" {
+	if conf.Mode == "dev" {
 		app.Get("/docs/*", swagger.HandlerDefault)
 	} else {
-		accessKeyHash = sha256.Sum256([]byte(config.Key))
+		accessKeyHash = sha256.Sum256([]byte(conf.Key))
 		app.Use(keyauth.New(keyauth.Config{
 			Validator:    keyValidator,
 			ErrorHandler: handlers.UnauthorizedError,
 		}))
 	}
 
-	err = podman.OpenConnection(config.Podman)
+	err = podman.OpenConnection(conf.Podman)
 	if err != nil {
 		panic(err)
 	}
@@ -61,5 +62,5 @@ func main() {
 
 	RegisterRoutes(app)
 
-	log.Fatal(app.Listen(config.Listen))
+	log.Fatal(app.Listen(conf.Listen))
 }
