@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouteHandlers(r *gin.RouterGroup, ctx HandlerContext) {
-	r.GET("/ping", ctx.HealthzHandler)
-	r.POST("/job", ctx.RunHandler)
-	r.GET("/job/output", ctx.GetJobOutput)
+func SetupRouteHandlers(r *gin.RouterGroup, e *Env) {
+	r.GET("/ping", e.HealthzHandler)
+	r.POST("/job", e.RunHandler)
+	r.GET("/job/output", e.GetJobOutput)
 }

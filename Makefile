@@ -2,10 +2,10 @@
 BIN_DIR := bin
 
 # Binaries
-API_BIN := $(BIN_DIR)/jobdoe-api
+API_BIN := $(BIN_DIR)/jobdoe
 
 # Go files
-API_MAIN := ./cmd/jobdoe/main.go
+API_MAIN := ./cmd/jobdoe/jobdoe.go
 
 # Default target
 .PHONY: all
