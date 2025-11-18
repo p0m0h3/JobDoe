@@ -1,3 +1,0 @@
-systemctl daemon-reload
-chmod -R 700 /opt/workerengine
-chmod +x /opt/workerengine/workerengine

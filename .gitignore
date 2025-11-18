@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-workerengine
+jobdoe
 
 # Test binary, built with `go test -c`
 *.test
@@ -15,14 +15,8 @@ workerengine
 # Go workspace file
 go.work
 
-# Environment file
-env
-
 # Config File
 config.json
-
-# Podman Registry Authentication File
-regauth.json
 
 # Editor/IDE files
 .vscode
