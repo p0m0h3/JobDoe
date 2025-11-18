@@ -5,7 +5,8 @@ import (
 )
 
 func SetupRouteHandlers(r *gin.RouterGroup, e *Env) {
-	r.GET("/ping", e.HealthzHandler)
-	r.POST("/job", e.RunHandler)
+	r.GET("/healthz", e.HealthzHandler)
+	r.POST("/job", e.CreateJob)
 	r.GET("/job/output", e.GetJobOutput)
+	r.POST("/volume", e.CreateVolume)
 }

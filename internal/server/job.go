@@ -4,12 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/p0m0h3/jobdoe/internal/schema"
 )
 
-func (e Env) RunHandler(c *gin.Context) {
-	req := schema.CreateJobRequest{}
-	if err := c.BindJSON(&req); err != nil {
+type CreateJobRequest struct {
+	Code string            `json:"code" binding:"required"`
+	Env  map[string]string `json:"env"`
+}
+
+func (e Env) CreateJob(c *gin.Context) {
+	req := CreateJobRequest{}
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
