@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS files (
+    id uuid PRIMARY KEY DEFAULT uuidv4(),
+    volume_id uuid REFERENCES volumes(id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
