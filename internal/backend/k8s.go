@@ -1,4 +1,4 @@
-package runner
+package backend
 
 import (
 	"bytes"
@@ -63,10 +63,9 @@ func NewK8sClientSet() (*kubernetes.Clientset, error) {
 	}
 
 	return clientset, nil
-
 }
 
-func (k *K8sRunner) Run(code string, env map[string]string) string {
+func (k *K8sRunner) Run(code string, env map[string]string) (string, error) {
 	jobuuid := uuid.NewString()
 	job := batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
@@ -89,7 +88,7 @@ func (k *K8sRunner) Run(code string, env map[string]string) string {
 	}
 
 	k.Clientset.BatchV1().Jobs("default").Create(context.TODO(), &job, metav1.CreateOptions{})
-	return jobuuid
+	return jobuuid, nil
 }
 
 func (k *K8sRunner) GetOutput(jobuuid string) (string, error) {

@@ -18,12 +18,16 @@ func (e Env) CreateJob(c *gin.Context) {
 		return
 	}
 
-	uuid := e.Runner.Run(req.Code, req.Env)
+	uuid, err := e.Backend.Run(req.Code, req.Env)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "code executed successfully", "uuid": uuid})
 }
 
 func (e Env) GetJobOutput(c *gin.Context) {
-	data, err := e.Runner.GetOutput(c.Param("uuid"))
+	data, err := e.Backend.GetOutput(c.Param("uuid"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
