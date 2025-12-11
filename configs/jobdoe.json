@@ -1,0 +1,9 @@
+{
+	"listen": "127.0.0.1:8080",
+	"production": false,
+	"backend": "k8s",
+	"s3_endpoint": "192.168.244.29:8080",
+	"s3_access_key": "GU3TG3JR1RZ3SPX5JI68",
+	"s3_secret_key": "UgSSlk6ECUCRsRy8A3e7VMaDRDSrWLlsSD7mp14L",
+	"postgres_url": "postgres://postgres:password@localhost:5432/jobdoe?sslmode=disable"
+}
